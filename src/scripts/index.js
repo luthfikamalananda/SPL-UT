@@ -1,5 +1,5 @@
-// import 'regenerator-runtime';
-// import AppHome from './views/home/app';
+import 'regenerator-runtime';
+import AppHome from './views/home/app';
 // import swRegister from './utils/sw-register';
 // import 'lazysizes';
 // import 'lazysizes/plugins/parent-fit/ls.parent-fit';
@@ -29,18 +29,18 @@
 //   navProfile.setAttribute('href', '/login')
 // }
 
-// const appHome = new AppHome({
-//   maincontent: document.querySelector('#mainhome'),
-// });
+const appHome = new AppHome({
+  maincontent: document.querySelector('#mainhome')
+});
 
-// window.addEventListener('hashchange', () => {
-//     appHome.renderPage();
-//   });
+window.addEventListener('hashchange', () => {
+    appHome.renderPage();
+  });
   
-//   window.addEventListener('load', () => {
-//     appHome.renderPage();
-//     swRegister();
-//   });
+  window.addEventListener('load', () => {
+    appHome.renderPage();
+    // swRegister();
+  });
 
 
 // // Search Function
