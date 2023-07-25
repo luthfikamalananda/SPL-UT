@@ -4,8 +4,8 @@ const homePage = {
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tabel Data Karyawan</h1>
-                    <p class="mb-4">Daftar Karyawan Pada Perusahaan </p>
+                    <h1 class="h3 mb-2 text-gray-800">Data Karyawan</h1>
+                    <p class="mb-4">Daftar Tabel Dari Data Karyawan Pada Perusahaan UT </p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
