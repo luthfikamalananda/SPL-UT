@@ -1,0 +1,11 @@
+{
+  "name": "spl-ut",
+  "version": "1.0.0",
+  "description": "Aplikasi berbasis web untuk memantau dan mengelola akan surat lembur",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Luthfi Ananda, Rizki Dliyaul Haq",
+  "license": "ISC"
+}
