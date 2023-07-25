@@ -1,5 +1,8 @@
 import 'regenerator-runtime';
 import AppHome from './views/home/app';
+import firebaseConfig from './globals/firebaseConfig';
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 // import swRegister from './utils/sw-register';
 // import 'lazysizes';
 // import 'lazysizes/plugins/parent-fit/ls.parent-fit';
@@ -29,18 +32,41 @@ import AppHome from './views/home/app';
 //   navProfile.setAttribute('href', '/login')
 // }
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+console.log('auth:', auth.currentUser);
+
+
 const appHome = new AppHome({
   maincontent: document.querySelector('#mainhome')
 });
 
+onAuthStateChanged(auth, (userCredential) => {
+  console.log(userCredential);
+  if (userCredential) {
+    const uid = userCredential.uid;
+    console.log(uid);
+    // ...
+    
+    const btnLogout = document.getElementById('btnLogout');
+    btnLogout.addEventListener('click', () => {
+        signOut(auth)
+    })
+
+  } else {
+    window.location.href = '/login';
+    }
+});
+
 window.addEventListener('hashchange', () => {
-    appHome.renderPage();
-  });
+  appHome.renderPage();
+});
   
-  window.addEventListener('load', () => {
-    appHome.renderPage();
-    // swRegister();
-  });
+window.addEventListener('load', () => {
+  appHome.renderPage();
+  // swRegister();
+});
 
 
 // // Search Function

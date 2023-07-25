@@ -11,15 +11,8 @@ class AppHome {
     try {
       const url = UrlParser.parseActiveUrlWithCombiner();
       const page = homeRoutes[url];
+      console.log('homepage route:',page);
       this._maincontent.innerHTML = await page.render();
-      var btns = document.getElementsByClassName('navbtn')
-      for (var i = 0; i < btns.length; i++) {
-        btns[i].addEventListener("click", function() {
-        var current = document.getElementsByClassName("active");
-        current[0].className = current[0].className.replace(" active", "");
-        this.className += " active";
-        });
-      }
       await page.afterRender();
     } catch (error) {
       this._maincontent.innerHTML = `<h1>${error}</h1>`;

@@ -1,3 +1,6 @@
+import firebaseConfig from "../../../globals/firebaseConfig";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 const homePage = {
     async render(){
         return `<!-- Begin Page Content -->
