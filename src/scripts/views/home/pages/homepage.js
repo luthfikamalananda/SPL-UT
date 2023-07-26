@@ -136,6 +136,7 @@ const homePage = {
                                     </tbody>
                                 </table>
                             </div>
+                            <button class="btn btn-primary" id='save-btn'>Save</button>
                         </div>
                     </div>
 
@@ -157,6 +158,14 @@ const homePage = {
                  }],
                  'order': [[1, 'asc']]
             });
+
+            $('#save-btn').on('click',function(){
+                let selected_rows = table.column(0).checkboxes.selected()
+
+                $.each(selected_rows, function (key, UID) {
+                    console.log(UID);
+                })
+            })
 
             // // Handle click on "Select all" control
             // $('#example-select-all').on('click', function(){
