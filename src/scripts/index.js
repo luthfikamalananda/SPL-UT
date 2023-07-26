@@ -36,11 +36,11 @@ onAuthStateChanged(auth, async (userCredential) => {
     const role = docSnap.data().role
     console.log(role);
 
-    // if (role == 'department head') {
-    //   const adminPage = document.getElementById('adminPage');
-    //   adminPage.style.display = 'none'
-    //   console.log('rtse');
-    // }
+    if (role == 'admin') {
+      const adminPage = document.getElementById('adminPage');
+      adminPage.style.removeProperty('display')
+      console.log('rtse');
+    }
 
 
     const userName = document.getElementById('userName');

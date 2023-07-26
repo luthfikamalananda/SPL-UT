@@ -22,7 +22,7 @@ const homePage = {
                         </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive">
+                            <div class="table-responsive" style='margin:0;'>
                                 <table class="table" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
@@ -142,7 +142,9 @@ const homePage = {
                                     </tbody>
                                 </table>
                             </div>
+                            <button class="btn btn-primary" id='save-btn'>Save</button>
                         </div>
+                        
                     </div>
 
                 </div>
@@ -163,6 +165,14 @@ const homePage = {
                  }],
                  'order': [[1, 'asc']]
             });
+
+            $('#save-btn').on('click',function(){
+                let selected_rows = table.column(0).checkboxes.selected()
+
+                $.each(selected_rows, function (key, UID) {
+                    console.log(UID);
+                })
+            })
 
             // // Handle click on "Select all" control
             // $('#example-select-all').on('click', function(){
