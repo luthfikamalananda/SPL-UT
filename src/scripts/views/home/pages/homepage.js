@@ -13,11 +13,17 @@ const homePage = {
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Data Karyawan</h6>
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h2>Daftar <b>Karyawan</b></h2>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                         <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
@@ -136,7 +142,6 @@ const homePage = {
                                     </tbody>
                                 </table>
                             </div>
-                            <button class="btn btn-primary" id='save-btn'>Save</button>
                         </div>
                     </div>
 
@@ -158,14 +163,6 @@ const homePage = {
                  }],
                  'order': [[1, 'asc']]
             });
-
-            $('#save-btn').on('click',function(){
-                let selected_rows = table.column(0).checkboxes.selected()
-
-                $.each(selected_rows, function (key, UID) {
-                    console.log(UID);
-                })
-            })
 
             // // Handle click on "Select all" control
             // $('#example-select-all').on('click', function(){
