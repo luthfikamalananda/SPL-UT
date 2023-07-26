@@ -173,6 +173,9 @@ const homePage = {
     },
 
     async afterRender(){
+        $(document).ready(function() {
+            $('#dataTable').DataTable();
+          });
     }
 }
 export default homePage;
