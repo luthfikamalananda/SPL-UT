@@ -11,8 +11,10 @@
 // import editPassword from "../views/home/pages/editPassword";
 // import editProfile from "../views/home/pages/editProfile";
 // import favourite from "../views/home/pages/favourite";
+import adminPage from "../views/home/pages/adminpage";
 import homePage from "../views/home/pages/homepage";
 import mainLogin from "../views/login/pages/main-login";
+
 // import otherProfile from "../views/home/pages/otherProfile";
 // import profile from "../views/home/pages/profile";
 // import profileMod from "../views/home/pages/profileMod";
@@ -34,7 +36,8 @@ const loginRoutes ={
 };
 
 const homeRoutes = {
-  '/': homePage
+  '/': homePage,
+  '/admin': adminPage,
   // '/profile': profile,
   // '/profile/:id': otherProfile,
   // '/editprofile': editProfile,
