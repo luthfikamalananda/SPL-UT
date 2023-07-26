@@ -20,144 +20,118 @@ const homePage = {
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
                                             <th>Name</th>
                                             <th>Position</th>
                                             <th>Office</th>
                                             <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
-                                            <th>Start date</th>
-                                            <th>Salary</th>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
                                         <tr>
+                                            <td>UID1</td>
                                             <td>Angelica Ramos</td>
                                             <td>Chief Executive Officer (CEO)</td>
                                             <td>London</td>
                                             <td>47</td>
-                                            <td>2009/10/09</td>
-                                            <td>$1,200,000</td>
                                         </tr>
                                         <tr>
+                                            <td>UID2</td>
                                             <td>Gavin Joyce</td>
                                             <td>Developer</td>
                                             <td>Edinburgh</td>
                                             <td>42</td>
-                                            <td>2010/12/22</td>
-                                            <td>$92,575</td>
                                         </tr>
                                         <tr>
+                                            <td>UID3</td>
                                             <td>Jennifer Chang</td>
                                             <td>Regional Director</td>
                                             <td>Singapore</td>
                                             <td>28</td>
-                                            <td>2010/11/14</td>
-                                            <td>$357,650</td>
                                         </tr>
                                         <tr>
+                                            <td>UID4</td>
                                             <td>Brenden Wagner</td>
                                             <td>Software Engineer</td>
                                             <td>San Francisco</td>
                                             <td>28</td>
-                                            <td>2011/06/07</td>
-                                            <td>$206,850</td>
                                         </tr>
                                         <tr>
+                                            <td>UID5</td>
                                             <td>Fiona Green</td>
                                             <td>Chief Operating Officer (COO)</td>
                                             <td>San Francisco</td>
                                             <td>48</td>
-                                            <td>2010/03/11</td>
-                                            <td>$850,000</td>
                                         </tr>
                                         <tr>
+                                            <td>UID6</td>
                                             <td>Prescott Bartlett</td>
                                             <td>Technical Author</td>
                                             <td>London</td>
                                             <td>27</td>
-                                            <td>2011/05/07</td>
-                                            <td>$145,000</td>
                                         </tr>
                                         <tr>
+                                            <td>UID7</td>
                                             <td>Gavin Cortez</td>
                                             <td>Team Leader</td>
                                             <td>San Francisco</td>
                                             <td>22</td>
-                                            <td>2008/10/26</td>
-                                            <td>$235,500</td>
                                         </tr>
                                         <tr>
+                                            <td>UID8</td>
                                             <td>Martena Mccray</td>
                                             <td>Post-Sales support</td>
                                             <td>Edinburgh</td>
                                             <td>46</td>
-                                            <td>2011/03/09</td>
-                                            <td>$324,050</td>
                                         </tr>
                                         <tr>
+                                            <td>UID9</td>
                                             <td>Unity Butler</td>
                                             <td>Marketing Designer</td>
                                             <td>San Francisco</td>
                                             <td>47</td>
-                                            <td>2009/12/09</td>
-                                            <td>$85,675</td>
                                         </tr>
                                         <tr>
+                                            <td>UID10</td>    
                                             <td>Howard Hatfield</td>
                                             <td>Office Manager</td>
                                             <td>San Francisco</td>
                                             <td>51</td>
-                                            <td>2008/12/16</td>
-                                            <td>$164,500</td>
                                         </tr>
                                         <tr>
+                                            <td>UID11</td>
                                             <td>Hope Fuentes</td>
                                             <td>Secretary</td>
                                             <td>San Francisco</td>
                                             <td>41</td>
-                                            <td>2010/02/12</td>
-                                            <td>$109,850</td>
                                         </tr>
                                         <tr>
+                                            <td>UID12</td>
                                             <td>Jonas Alexander</td>
                                             <td>Developer</td>
                                             <td>San Francisco</td>
                                             <td>30</td>
-                                            <td>2010/07/14</td>
-                                            <td>$86,500</td>
                                         </tr>
                                         <tr>
+                                            <td>UID13</td>
                                             <td>Shad Decker</td>
                                             <td>Regional Director</td>
                                             <td>Edinburgh</td>
                                             <td>51</td>
-                                            <td>2008/11/13</td>
-                                            <td>$183,000</td>
                                         </tr>
                                         <tr>
+                                            <td>UID14</td>
                                             <td>Michael Bruce</td>
                                             <td>Javascript Developer</td>
                                             <td>Singapore</td>
                                             <td>29</td>
-                                            <td>2011/06/27</td>
-                                            <td>$183,000</td>
                                         </tr>
                                         <tr>
+                                            <td>UID15</td>
                                             <td>Donna Snider</td>
                                             <td>Customer Support</td>
                                             <td>New York</td>
                                             <td>27</td>
-                                            <td>2011/01/25</td>
-                                            <td>$112,000</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -174,8 +148,74 @@ const homePage = {
 
     async afterRender(){
         $(document).ready(function() {
-            $('#dataTable').DataTable();
+            let table = $('#dataTable').DataTable({
+                'columnDefs': [{
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true
+                    }
+                 }],
+                 'order': [[1, 'asc']]
+            });
+
+            // // Handle click on "Select all" control
+            // $('#example-select-all').on('click', function(){
+            //     // Get all rows with search applied
+            //     var rows = table.rows({ 'search': 'applied' }).nodes();
+
+            //     // row.each(function(index,elem){
+            //     //     var checkbox_value = $(elem).val();
+            //     //     console.log(elem);
+            //     //     console.log('check', checkbox_value);
+            //     //     //Do something with 'checkbox_value'
+            //     // });
+            //     // Check/uncheck checkboxes for all rows in the table
+            //     $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            // });
+
+            //   // Handle click on checkbox to set state of "Select all" control
+            // $('#example tbody').on('change', 'input[type="checkbox"]', function(){
+            //     // If checkbox is not checked
+            //     if(!this.checked){
+            //     var el = $('#example-select-all').get(0);
+            //     // If "Select all" control is checked and has 'indeterminate' property
+            //     if(el && el.checked && ('indeterminate' in el)){
+            //         // Set visual state of "Select all" control
+            //         // as 'indeterminate'
+            //         el.indeterminate = true;
+            //     }
+            //     }
+            // });
+
+
+            //  // Handle form submission event
+            // $('#frm-example').on('submit', function(e){
+            //     var form = this;
+
+            //     // Iterate over all checkboxes in the table
+            //     table.$('input[type="checkbox"]').each(function(){
+            //     // If checkbox doesn't exist in DOM
+            //     if(!$.contains(document, this)){
+            //         // If checkbox is checked
+            //         if(this.checked){
+            //             // Create a hidden element
+            //             $(form).append(
+            //                 $('<input>')
+            //                 .attr('type', 'hidden')
+            //                 .attr('name', this.name)
+            //                 .val(this.value)
+            //             );
+            //         }
+            //     }
+            //     });
+            // });
+
+
+            
           });
+
+          
+        
     }
 }
 export default homePage;
