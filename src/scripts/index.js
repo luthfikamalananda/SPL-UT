@@ -20,15 +20,28 @@ const appHome = new AppHome({
   maincontent: document.querySelector('#mainhome')
 });
 
-onAuthStateChanged(auth, async (userCredential) => {
-  console.log(userCredential);
-  if (userCredential) {
-    const uid = userCredential.uid;
+window.addEventListener('hashchange', () => {
+  appHome.renderPage();
+});
+  
+window.addEventListener('load', () => {
+  appHome.renderPage();
+  // swRegister();
+});
+
+  if(localStorage.getItem('user')) {
+    const user = localStorage.getItem('user');
+    const data = JSON.parse(user)
+    const uid = data.id;
     console.log(uid);
+
+    const userName = document.getElementById('userName');
+    userName.innerText = data.name
     
     const btnLogout = document.getElementById('btnLogout');
     btnLogout.addEventListener('click', () => {
-        signOut(auth)
+      localStorage.removeItem('user');
+      location.reload();
     })
 
     const docRef = doc(db, "user", uid);
@@ -39,23 +52,10 @@ onAuthStateChanged(auth, async (userCredential) => {
     if (role == 'admin') {
       const adminPage = document.getElementById('adminPage');
       adminPage.style.removeProperty('display')
-      console.log('rtse');
     }
-
-
-    const userName = document.getElementById('userName');
-    userName.innerText = userCredential.displayName
 
   } else {
     window.location.href = '/login';
-    }
-});
+  }
 
-window.addEventListener('hashchange', () => {
-  appHome.renderPage();
-});
-  
-window.addEventListener('load', () => {
-  appHome.renderPage();
-  // swRegister();
-});
+

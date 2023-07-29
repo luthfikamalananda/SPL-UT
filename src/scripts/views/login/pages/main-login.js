@@ -1,6 +1,7 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, getDocs, setDoc, collection, query, where, doc, updateDoc } from "firebase/firestore";
 import AppHome from "../../home/app";
 
 
@@ -60,6 +61,7 @@ const mainLogin = {
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         console.log('auth:', auth.currentUser);
+        const db = getFirestore(app);
 
         
         const formLogin = document.getElementById('formLogin');
@@ -67,33 +69,54 @@ const mainLogin = {
             e.preventDefault()
             const InputEmail = document.getElementById('InputEmail').value;
             const InputPassword = document.getElementById('InputPassword').value;
-            console.log('email:', InputEmail);
-            console.log('password:', InputPassword);
-
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, InputEmail, InputPassword)
-                console.log(userCredential);
-                console.log('auth:', auth.currentUser);
-                window.location.href = './';
-                // location.reload();
-            } catch (error) {
-                console.log(error);
-            }
             
+            let user = '';
+            const q = query(collection(db, "user"), where("email", "==", InputEmail))
+            const querySnapshot = await getDocs(q)
+            if (querySnapshot.size > 0) {
+                querySnapshot.forEach((doc) => {
+                    user = doc.data();
+                    user.id = doc.id;
+                })
+
+                if (user.password == InputPassword) { // Login user
+                    const dataToDB = {
+                        id: user.id,
+                        role: user.role,
+                        last_login: new Date().toISOString().split('T')[0],
+                        email: user.email,
+                        name: user.name,
+                    }
+                    await updateDoc(doc(db,"user", user.id), {
+                        last_login: new Date().toISOString().split('T')[0],
+                    })
+        
+                    localStorage.setItem('user', JSON.stringify(dataToDB))
+        
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Login Berhasil',
+                        text: 'Selamat login anda berhasil',
+                        showCloseButton: true,
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                            window.location.href = './';
+                            } 
+                        })
+                } else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Login Gagal',
+                        text: 'Pastikan data yang anda masukkan benar',
+                        showCloseButton: true,
+                        allowOutsideClick: false
+                        })
+                }
+            }
         })
 
-        // onAuthStateChanged(auth, (userCredential) => {
-        // if (userCredential) {
-        //     // User is signed in, see docs for a list of available properties
-        //     // https://firebase.google.com/docs/reference/js/auth.user
-        //     const uid = userCredential.uid;
-        //     console.log(uid);
-        //     // ...
-        // } else {
-        //     // User is signed out
-        //     // ...
-        // }
-        // });
+
     }
 }
 export default mainLogin;
