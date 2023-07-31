@@ -11,10 +11,10 @@ const adminPage = {
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>Manage <b>Employees</b></h2>
+                            <h2>Manage <b>Akun</b></h2>
                         </div>
                         <div class="col-sm-6">
-                            <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"> <span>Add New Employee</span></a>
+                            <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"> <span>Tambah Akun Baru</span></a>
                         </div>
                     </div>
                 </div>
@@ -71,8 +71,8 @@ const adminPage = {
                         </div>					
                     </div>
                     <div class="modal-footer">
-                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <button type="submit" class="btn btn-success" id='btnAdd'>Add</button>
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Batal">
+                        <button type="submit" class="btn btn-success" id='btnAdd'>Tambah</button>
                     </div>
                 </form>
             </div>

@@ -1,6 +1,7 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { collection, getFirestore, query, where, getDocs, setDoc, doc } from "firebase/firestore";
+
 const homePage = {
     async render(){
         return `<!-- Begin Page Content -->
@@ -26,84 +27,15 @@ const homePage = {
                                 <table class="table" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                                        <th style='max-width:50px;'><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
                                             <th>Name</th>
-                                            <th>Position</th>
-                                            <th>Office</th>
-                                            <th>Age</th>
+                                            <th>Email</th>
+                                            <th>Jam Lembur</th>
+                                            <th>Terakhir Login</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>UID1</td>
-                                            <td>Angelica Ramos</td>
-                                            <td>Chief Executive Officer (CEO)</td>
-                                            <td>London</td>
-                                            <td>47</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID2</td>
-                                            <td>Gavin Joyce</td>
-                                            <td>Developer</td>
-                                            <td>Edinburgh</td>
-                                            <td>42</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID3</td>
-                                            <td>Jennifer Chang</td>
-                                            <td>Regional Director</td>
-                                            <td>Singapore</td>
-                                            <td>28</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID4</td>
-                                            <td>Brenden Wagner</td>
-                                            <td>Software Engineer</td>
-                                            <td>San Francisco</td>
-                                            <td>28</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID5</td>
-                                            <td>Fiona Green</td>
-                                            <td>Chief Operating Officer (COO)</td>
-                                            <td>San Francisco</td>
-                                            <td>48</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID6</td>
-                                            <td>Prescott Bartlett</td>
-                                            <td>Technical Author</td>
-                                            <td>London</td>
-                                            <td>27</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID7</td>
-                                            <td>Gavin Cortez</td>
-                                            <td>Team Leader</td>
-                                            <td>San Francisco</td>
-                                            <td>22</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID8</td>
-                                            <td>Martena Mccray</td>
-                                            <td>Post-Sales support</td>
-                                            <td>Edinburgh</td>
-                                            <td>46</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID9</td>
-                                            <td>Unity Butler</td>
-                                            <td>Marketing Designer</td>
-                                            <td>San Francisco</td>
-                                            <td>47</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID10</td>    
-                                            <td>Howard Hatfield</td>
-                                            <td>Office Manager</td>
-                                            <td>San Francisco</td>
-                                            <td>51</td>
-                                        </tr>
+                                    <tbody id='bodyTable'>
+  
                                     </tbody>
                                 </table>
                             </div>
@@ -120,14 +52,34 @@ const homePage = {
     },
 
     async afterRender(){
+        // Initialize Database
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+
+        // Read All User
+        const bodyTable = document.getElementById('bodyTable');
+        const initializeData = query(collection(db, "user"), where("role", "==", "karyawan"))
+        const userData = await getDocs(initializeData)
+        userData.forEach(user => {
+            bodyTable.innerHTML += `<tr>
+            <td>${user.id}</td>
+            <td>${user.data().name}</td>
+            <td>${user.data().email}</td>
+            <td>${user.data().jam_lembur} Jam</td>
+            <td>${user.data().last_login}</td>
+        </tr>`
+        });
+
+        // Data Tables
         $(document).ready(function() {
             let table = $('#dataTable').DataTable({
                 'columnDefs': [{
                     'targets': 0,
                     'checkboxes': {
                         'selectRow': true
-                    }
+                    },
                  }],
+                 retrieve: true,
                  'order': [[1, 'asc']]
             });
 
@@ -138,13 +90,8 @@ const homePage = {
                     console.log(UID);
                 })
             })
-
-
-            
           });
 
-          
-        
     }
 }
 export default homePage;
