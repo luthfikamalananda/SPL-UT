@@ -1,6 +1,6 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { collection, getFirestore, query, where, getDocs, setDoc, doc } from "firebase/firestore";
+import { collection, getFirestore, query, where, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { nanoid, customAlphabet } from "nanoid";
 
 const adminPage = {
@@ -122,27 +122,6 @@ const adminPage = {
         </form>
     </div>
         </div>
-    </div>
-    <!-- Delete Modal HTML -->
-    <div id="deleteEmployeeModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form>
-                    <div class="modal-header">						
-                        <h4 class="modal-title">Delete Employee</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="modal-body">					
-                        <p>Are you sure you want to delete these Records?</p>
-                        <p class="text-warning"><small>This action cannot be undone.</small></p>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-danger" value="Delete">
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>`
     },
 
@@ -163,10 +142,52 @@ const adminPage = {
             <td style='text-transform: capitalize;'>${user.data().role.replace('_',' ')}</td>
             <td>${user.data().last_login}</td>
             <td>
-                <a href="#editEmployeeModal" data-id='${user.id}' class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                <a href="#deleteEmployeeModal" data-id='${user.id}' class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                <a href="#editEmployeeModal" data-id='${user.id}' class="edit" data-toggle="modal" id='btnEdit'><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                <a href="#" data-id='${user.id}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
             </td>
         </tr>`
+        });
+
+        // Delete User
+        const btnsDelete = document.querySelectorAll('#btnDelete');
+        btnsDelete.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const dataid = btn.getAttribute('data-id');
+                Swal.fire({
+                    title: 'Akun ini akan dihapus? ',
+                    showCancelButton: true,
+                    confirmButtonText: 'Konfirmasi',
+                  }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            await deleteDoc(doc(db, 'user', dataid));
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Penghapusan Berhasil',
+                                text: 'Selamat akun berhasil dihapus',
+                                showCloseButton: true,
+                                }).then((result) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result.isConfirmed) {
+                                    location.reload();
+                                    } 
+                                })
+                        } catch (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Penghapusan Gagal',
+                                text: error,
+                                showCloseButton: true,
+                                allowOutsideClick: false
+                                })
+                        }
+                        
+                    }
+                  });
+                
+                
+            })
         });
 
         // Register
