@@ -1,6 +1,6 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { collection, getFirestore, query, where, getDocs, setDoc, doc, deleteDoc } from "firebase/firestore";
+import { collection, getFirestore, query, where, getDocs, setDoc, doc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
 import { nanoid, customAlphabet } from "nanoid";
 
 const adminPage = {
@@ -82,27 +82,27 @@ const adminPage = {
     <div id="editEmployeeModal" class="modal fade">
         <div class="modal-dialog">
         <div class="modal-content">
-        <form>
+        <form id='formEditUser' action="#" method='post'>
             <div class="modal-header">						
                 <h4 class="modal-title">Edit Employee</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             </div>
             <div class="modal-body">					
                 <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" class="form-control" required>
+                    <label for="nameEdit">Name</label>
+                    <input type="text" class="form-control" required id='nameEdit' name='nameEdit'>
                 </div>
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" required>
+                    <label for='emailEdit'>Email</label>
+                    <input type="email" class="form-control" required id='emailEdit' name='emailEdit'>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" required>
+                    <label for='passwordEdit'>Password</label>
+                    <input type="password" class="form-control" required id='passwordEdit' name='passwordEdit'>
                 </div>
                 <div class="form-group">
-                <label>Role </label>
-                            <select class="form-control">
+                <label for='roleEdit'>Role </label>
+                            <select class="form-control" id='roleEdit' name='roleEdit'>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <option value="karyawan"><a class="dropdown-item">Karyawan</a></option>
                                     <option value="departemen_head"><a class="dropdown-item">Departemen Head</a></option>
@@ -111,13 +111,11 @@ const adminPage = {
                                     <option value="departement_head_human_capital"><a class="dropdown-item">Departement Head Human Capital</a></option>
                                 </div>
                             </select>
-                        </form>
-                    </div>
                 </div>					
             </div>
             <div class="modal-footer">
                 <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                <input type="submit" class="btn btn-success" value="Edit">
+                <button type="submit" class="btn btn-success" id='btnAdd'>Edit</button>
             </div>
         </form>
     </div>
@@ -139,7 +137,7 @@ const adminPage = {
             bodyTable.innerHTML += `<tr>
             <td>${user.data().name}</td>
             <td>${user.data().email}</td>
-            <td style='text-transform: capitalize;'>${user.data().role.replace('_',' ')}</td>
+            <td style='text-transform: capitalize;'>${user.data().role.replace(/_/g,' ')}</td>
             <td>${user.data().last_login}</td>
             <td>
                 <a href="#editEmployeeModal" data-id='${user.id}' class="edit" data-toggle="modal" id='btnEdit'><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
@@ -147,6 +145,65 @@ const adminPage = {
             </td>
         </tr>`
         });
+
+        // Edit User
+        const btnsEdit = document.querySelectorAll('#btnEdit');
+
+        const nameEdit = document.getElementById('nameEdit');
+        const emailEdit = document.getElementById('emailEdit');
+        const passwordEdit = document.getElementById('passwordEdit');
+        const roleEdit = document.getElementById('roleEdit');
+        const formEditUser = document.getElementById('formEditUser');
+
+        let idEdit = '';
+        btnsEdit.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                idEdit = btn.getAttribute('data-id');
+
+                const docRef = doc(db, "user", idEdit);
+                const userCredentials = await getDoc(docRef);
+
+                nameEdit.value = userCredentials.data().name
+                emailEdit.value = userCredentials.data().email
+                passwordEdit.value = userCredentials.data().password
+                roleEdit.value = userCredentials.data().role
+            })    
+        });
+
+        
+        formEditUser.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            const data = {
+                name: nameEdit.value,
+                email: emailEdit.value,
+                password: passwordEdit.value,
+                role: roleEdit.value,
+            }
+
+            try {
+                await updateDoc(doc(db, "user", idEdit), data)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Pengeditan Berhasil',
+                    text: 'Selamat akun berhasil anda edit',
+                    showCloseButton: true,
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                        location.reload();
+                        } 
+                    })
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Pengeditan Gagal',
+                    text: error,
+                    showCloseButton: true,
+                    allowOutsideClick: false
+                    })
+            }
+        })
 
         // Delete User
         const btnsDelete = document.querySelectorAll('#btnDelete');
@@ -181,12 +238,9 @@ const adminPage = {
                                 showCloseButton: true,
                                 allowOutsideClick: false
                                 })
-                        }
-                        
+                        }   
                     }
                   });
-                
-                
             })
         });
 
