@@ -39,7 +39,7 @@ const homePage = {
                                     </tbody>
                                 </table>
                             </div>
-                            <button class="btn btn-primary" id='save-btn'>Save</button>
+                            <button class="btn btn-primary" id='save-btn'>Pilih</button>
                         </div>
                         
                     </div>
@@ -85,9 +85,10 @@ const homePage = {
 
             $('#save-btn').on('click',function(){
                 let selected_rows = table.column(0).checkboxes.selected()
-
+                let idKaryawan = []
                 $.each(selected_rows, function (key, UID) {
-                    console.log(UID);
+                    idKaryawan.push(UID)
+                    localStorage.setItem('idKaryawan', idKaryawan)
                 })
             })
           });
