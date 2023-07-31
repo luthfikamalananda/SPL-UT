@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "firebase": "^10.1.0",
+    "nanoid": "^4.0.2",
     "regenerator-runtime": "^0.13.11"
   }
 }
