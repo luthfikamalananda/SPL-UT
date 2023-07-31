@@ -160,7 +160,7 @@ const adminPage = {
             bodyTable.innerHTML += `<tr>
             <td>${user.data().name}</td>
             <td>${user.data().email}</td>
-            <td style='text-transform: capitalize;'>${user.data().role}</td>
+            <td style='text-transform: capitalize;'>${user.data().role.replace('_',' ')}</td>
             <td>${user.data().last_login}</td>
             <td>
                 <a href="#editEmployeeModal" data-id='${user.id}' class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
