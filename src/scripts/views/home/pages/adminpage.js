@@ -1,6 +1,7 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { collection, getFirestore, query, where, getDocs } from "firebase/firestore";
+
 const adminPage = {
     async render(){
         return `<div class="container-xl">
@@ -16,30 +17,18 @@ const adminPage = {
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="selectAll">
-                                    <label for="selectAll"></label>
-                                </span>
-                            </th>
-                            <th>Name</th>
+                            <th>Nama</th>
                             <th>Email</th>
-                            <th>Address</th>
-                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Terakhir Login</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id='bodyTable'>
                         <tr>
-                            <td>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="checkbox1" name="options[]" value="1">
-                                    <label for="checkbox1"></label>
-                                </span>
-                            </td>
                             <td>Thomas Hardy</td>
                             <td>thomashardy@mail.com</td>
                             <td>89 Chiaroscuro Rd, Portland, USA</td>
@@ -50,12 +39,6 @@ const adminPage = {
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="checkbox2" name="options[]" value="1">
-                                    <label for="checkbox2"></label>
-                                </span>
-                            </td>
                             <td>Dominique Perrier</td>
                             <td>dominiqueperrier@mail.com</td>
                             <td>Obere Str. 57, Berlin, Germany</td>
@@ -66,12 +49,6 @@ const adminPage = {
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="checkbox3" name="options[]" value="1">
-                                    <label for="checkbox3"></label>
-                                </span>
-                            </td>
                             <td>Maria Anders</td>
                             <td>mariaanders@mail.com</td>
                             <td>25, rue Lauriston, Paris, France</td>
@@ -82,12 +59,6 @@ const adminPage = {
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="checkbox4" name="options[]" value="1">
-                                    <label for="checkbox4"></label>
-                                </span>
-                            </td>
                             <td>Fran Wilson</td>
                             <td>franwilson@mail.com</td>
                             <td>C/ Araquil, 67, Madrid, Spain</td>
@@ -98,12 +69,6 @@ const adminPage = {
                             </td>
                         </tr>					
                         <tr>
-                            <td>
-                                <span class="custom-checkbox">
-                                    <input type="checkbox" id="checkbox5" name="options[]" value="1">
-                                    <label for="checkbox5"></label>
-                                </span>
-                            </td>
                             <td>Martin Blank</td>
                             <td>martinblank@mail.com</td>
                             <td>Via Monte Bianco 34, Turin, Italy</td>
@@ -234,70 +199,21 @@ const adminPage = {
     async afterRender(){
         $(document).ready(function() {
             let table = $('#dataTable').DataTable({
-                'columnDefs': [{
-                    'targets': 0,
-                    'checkboxes': {
-                        'selectRow': true
-                    }
-                 }],
+                "columnDefs": [
+                    { "width": "20%", "targets": 0}
+                ],
                  'order': [[1, 'asc']]
             });
-
-            // // Handle click on "Select all" control
-            // $('#example-select-all').on('click', function(){
-            //     // Get all rows with search applied
-            //     var rows = table.rows({ 'search': 'applied' }).nodes();
-
-            //     // row.each(function(index,elem){
-            //     //     var checkbox_value = $(elem).val();
-            //     //     console.log(elem);
-            //     //     console.log('check', checkbox_value);
-            //     //     //Do something with 'checkbox_value'
-            //     // });
-            //     // Check/uncheck checkboxes for all rows in the table
-            //     $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            // });
-
-            //   // Handle click on checkbox to set state of "Select all" control
-            // $('#example tbody').on('change', 'input[type="checkbox"]', function(){
-            //     // If checkbox is not checked
-            //     if(!this.checked){
-            //     var el = $('#example-select-all').get(0);
-            //     // If "Select all" control is checked and has 'indeterminate' property
-            //     if(el && el.checked && ('indeterminate' in el)){
-            //         // Set visual state of "Select all" control
-            //         // as 'indeterminate'
-            //         el.indeterminate = true;
-            //     }
-            //     }
-            // });
-
-
-            //  // Handle form submission event
-            // $('#frm-example').on('submit', function(e){
-            //     var form = this;
-
-            //     // Iterate over all checkboxes in the table
-            //     table.$('input[type="checkbox"]').each(function(){
-            //     // If checkbox doesn't exist in DOM
-            //     if(!$.contains(document, this)){
-            //         // If checkbox is checked
-            //         if(this.checked){
-            //             // Create a hidden element
-            //             $(form).append(
-            //                 $('<input>')
-            //                 .attr('type', 'hidden')
-            //                 .attr('name', this.name)
-            //                 .val(this.value)
-            //             );
-            //         }
-            //     }
-            //     });
-            // });
-
-
-            
           });
+
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+
+        const initializeData = query(collection(db, "user"), where("role", "!=", "admin"))
+        const userData = await getDocs(initializeData)
+        userData.forEach(user => {
+            console.log(user.id, '=>', user.data());
+        });
 
           
         

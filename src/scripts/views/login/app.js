@@ -11,7 +11,7 @@ class AppLogin {
     try {
       const url = UrlParser.parseActiveUrlWithCombiner();
       const page = loginRoutes[url];
-      console.log(page);
+      // console.log(page);
       this._maincontent.innerHTML = await page.render();
 
       await page.afterRender();

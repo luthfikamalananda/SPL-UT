@@ -104,41 +104,6 @@ const homePage = {
                                             <td>San Francisco</td>
                                             <td>51</td>
                                         </tr>
-                                        <tr>
-                                            <td>UID11</td>
-                                            <td>Hope Fuentes</td>
-                                            <td>Secretary</td>
-                                            <td>San Francisco</td>
-                                            <td>41</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID12</td>
-                                            <td>Jonas Alexander</td>
-                                            <td>Developer</td>
-                                            <td>San Francisco</td>
-                                            <td>30</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID13</td>
-                                            <td>Shad Decker</td>
-                                            <td>Regional Director</td>
-                                            <td>Edinburgh</td>
-                                            <td>51</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID14</td>
-                                            <td>Michael Bruce</td>
-                                            <td>Javascript Developer</td>
-                                            <td>Singapore</td>
-                                            <td>29</td>
-                                        </tr>
-                                        <tr>
-                                            <td>UID15</td>
-                                            <td>Donna Snider</td>
-                                            <td>Customer Support</td>
-                                            <td>New York</td>
-                                            <td>27</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -173,58 +138,6 @@ const homePage = {
                     console.log(UID);
                 })
             })
-
-            // // Handle click on "Select all" control
-            // $('#example-select-all').on('click', function(){
-            //     // Get all rows with search applied
-            //     var rows = table.rows({ 'search': 'applied' }).nodes();
-
-            //     // row.each(function(index,elem){
-            //     //     var checkbox_value = $(elem).val();
-            //     //     console.log(elem);
-            //     //     console.log('check', checkbox_value);
-            //     //     //Do something with 'checkbox_value'
-            //     // });
-            //     // Check/uncheck checkboxes for all rows in the table
-            //     $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            // });
-
-            //   // Handle click on checkbox to set state of "Select all" control
-            // $('#example tbody').on('change', 'input[type="checkbox"]', function(){
-            //     // If checkbox is not checked
-            //     if(!this.checked){
-            //     var el = $('#example-select-all').get(0);
-            //     // If "Select all" control is checked and has 'indeterminate' property
-            //     if(el && el.checked && ('indeterminate' in el)){
-            //         // Set visual state of "Select all" control
-            //         // as 'indeterminate'
-            //         el.indeterminate = true;
-            //     }
-            //     }
-            // });
-
-
-            //  // Handle form submission event
-            // $('#frm-example').on('submit', function(e){
-            //     var form = this;
-
-            //     // Iterate over all checkboxes in the table
-            //     table.$('input[type="checkbox"]').each(function(){
-            //     // If checkbox doesn't exist in DOM
-            //     if(!$.contains(document, this)){
-            //         // If checkbox is checked
-            //         if(this.checked){
-            //             // Create a hidden element
-            //             $(form).append(
-            //                 $('<input>')
-            //                 .attr('type', 'hidden')
-            //                 .attr('name', this.name)
-            //                 .val(this.value)
-            //             );
-            //         }
-            //     }
-            //     });
-            // });
 
 
             
