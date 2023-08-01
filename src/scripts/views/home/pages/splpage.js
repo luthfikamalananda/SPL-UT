@@ -61,6 +61,28 @@ const splPage = {
     </div>
     </div>
     </div>
+    </div>
+    <div id="rejectModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id='formReject' action="#" method='post'>
+                    <div class="modal-header">						
+                        <h4 class="modal-title">Alasan Penolakan SPL</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">					
+                        <div class="form-group">
+                            <label for="reasonInput">Masukkan Alasan : </label>
+                            <textarea class="form-control" required id='reasonInput' name='reasonInput' rows="4" cols="50"></textarea>
+                        </div>	
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Batal">
+                        <button type="submit" class="btn btn-danger" id='btnRejectSubmit'>Reject</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>`
     },
 
@@ -162,7 +184,7 @@ const splPage = {
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger">${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnApprove' style='color:#2fcd2c;'><i class="material-icons" data-toggle="tooltip" title="Approve">check_circle</i></a>
-                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
+                            <a href="#rejectModal" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
                         </td>
                     </tr>`
                 }
@@ -215,7 +237,51 @@ const splPage = {
                     });
                 })
             });
+
             //--------------------------------- REJECT BUTTON ----------------------------------
+            let idSPLtoEdit = ''
+            const btnsReject = document.querySelectorAll('#btnReject');
+            btnsReject.forEach((btn) => {
+                idSPLtoEdit = btn.getAttribute('data-id');
+            })
+
+            const formReject = document.getElementById('formReject');
+            const reasonInput = document.getElementById('reasonInput');
+            formReject.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const docSnap = await getDoc(doc(db, 'spl', idSPLtoEdit))
+                const objSPL = docSnap.data().spl;
+                console.log(objSPL);
+                objSPL[1].hcbc = `${data.id}|${data.name}` // Add HCBC in index 1
+                objSPL[1].status = 'ditolak_oleh_hcbc' // Add Status rejected in index 1
+                objSPL[1].reject_reason = reasonInput.value; // Add reasoning in index 1
+
+                try {
+                    await setDoc(doc(db, 'spl', idSPLtoEdit), {
+                        spl:objSPL
+                    });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Penolakan Berhasil',
+                        text: 'SPL berhasil anda Tolak (Reject)',
+                        showCloseButton: true,
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            location.reload();
+                        } 
+                    })
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Penolakan Gagal',
+                        text: error,
+                        showCloseButton: true,
+                        allowOutsideClick: false
+                    })
+                }
+            } )
 
             // Get Private SPL Data (Self-Made by Account)
             const Table_2_Title = document.getElementById('table2Title');
@@ -270,6 +336,7 @@ const splPage = {
                     const objSPL = docSnap.data().spl;
                     console.log(objSPL);
                     delete objSPL[1].hcbc // Remove HCBC in index 1
+                    delete objSPL[1].reject_reason // Remove reject_reason in index 1
                     objSPL[1].status = 'diajukan_ke_hcbc' // Restore Status in index 1
 
                     Swal.fire({
