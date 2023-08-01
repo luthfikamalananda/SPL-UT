@@ -9,12 +9,10 @@ const splPage = {
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <h2><b>Surat Perintah Lembur Keputusan Anda</b></h2>
-                        </div>
+                        <h2 id='table1Title'><b>Surat Perintah Lembur Keputusan Anda</b></h2>
                     </div>
                 </div>
-                <table class="table table-striped table-hover" id="dataTablePrivate" width="100%" cellspacing="0">
+                <table class="table table-striped table-hover" id="dataTable1" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID Surat</th>
@@ -41,12 +39,10 @@ const splPage = {
             <div class="table-wrapper">
                 <div class="table-title">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <h2><b>Seluruh Perintah Lembur</b></h2>
-                        </div>
+                        <h2 id='table2Title'><b>Seluruh Surat Perintah Lembur</b></h2>
                     </div>
                 </div>
-                <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-striped table-hover" id="dataTable2" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID Surat</th>
@@ -65,28 +61,6 @@ const splPage = {
     </div>
     </div>
     </div>
-    </div>
-
-    <!-- Delete Modal HTML -->
-    <div id="deleteEmployeeModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form>
-                    <div class="modal-header">						
-                        <h4 class="modal-title">Delete Perintah Lembur</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="modal-body">					
-                        <p>Are you sure you want to delete these Records?</p>
-                        <p class="text-warning"><small>This action cannot be undone.</small></p>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-danger" value="Delete">
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>`
     },
 
@@ -95,68 +69,156 @@ const splPage = {
         const user = localStorage.getItem('user');
         const data = JSON.parse(user)
 
-        // Authentication
-        let findStatus = 'diajukan'
-        if (data.role == 'hcbc') {
-            findStatus = 'diajukan'
-        } else if(data.role == 'general_marketing') {
-            findStatus = 'approved_hcbc'
-        }
-
         // Initialize Database
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
 
-        // Get Private SPL Data (Self-Made by Account)
-        const bodyTablePrivate = document.getElementById('bodyTablePrivate');
-        const initializeData = query(collection(db, "spl"))
-        const dataSPL = await getDocs(initializeData)
-        dataSPL.forEach(element => {
-            const spl = element.data().spl
-            console.log(spl);
-            let foundSPL = spl.find(o => o.departemen_head === `${data.id}|${data.name}`);
-            console.log(foundSPL);
-            let splid = element.id
+        // Authentication
+        let findStatus = 'diajukan_ke_hcbc'
+        if (data.role == 'departemen_head' || data.role == 'admin') { // ------------------ Departemen Head ------------------ 
+            // Get Private SPL Data (First Table)
+            const bodyTablePrivate = document.getElementById('bodyTablePrivate');
+            const initializeData = query(collection(db, "spl"))
+            const dataSPL = await getDocs(initializeData)
+            dataSPL.forEach(element => {
+                const spl = element.data().spl
+                console.log(spl);
+                let foundSPL = spl.find(o => o.departemen_head === `${data.id}|${data.name}`);
+                console.log(foundSPL);
+                let splid = element.id
 
-            if (foundSPL) {
-                bodyTablePrivate.innerHTML += `
+                if (foundSPL) {
+                    bodyTablePrivate.innerHTML += `
+                    <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger">${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                        </td>
+                    </tr>`
+                }
+            });
+
+            // Get SPL Data (Based on Status)
+            const bodyTable = document.getElementById('bodyTable');
+            dataSPL.forEach(element => {
+                const spl = element.data().spl
+                console.log(spl);
+                let foundSPL = spl.find(o => o.status === findStatus);
+                console.log(foundSPL);
+                let splid = element.id
+
+                if (foundSPL) {
+                    bodyTable.innerHTML += `
+                    <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger">${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                    </tr>`
+                }
+            });
+
+        } else if (data.role == 'hcbc') { // ------------------ HCBC ------------------ 
+            findStatus = 'diajukan_ke_hcbc'
+            // Get SPL Data (Based on Status)
+            const Table_1_Title = document.getElementById('table1Title');
+            Table_1_Title.innerHTML = '<b>Surat Perintah Lembur yang Butuh Persetujuan</b>'
+            const tablePrivate = document.getElementById('dataTable1');
+            tablePrivate.innerHTML = `
+            <thead>
                 <tr>
-                    <td>${splid}</td>
-                    <td>${spl[0].tanggal_spl_dibuat}</td>
-                    <td>${spl[0].tanggal_lembur}</td>
-                    <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
-                    <td style='text-transform: capitalize;'><h6><span class="badge badge-danger">${spl[1].status}</span></h6></td>
-                    <td>
-                        <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                    </td>
-                </tr>`
-            }
-        });
+                <th>ID Surat</th>
+                <th>Tanggal Surat</th>
+                <th>Tanggal Lembur</th>
+                <th>Utusan</th>
+                <th>Status</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id='bodyTablePrivate'></tbody>
+            `
+            const bodyTablePrivate = document.getElementById('bodyTablePrivate');
+            const initializeData = query(collection(db, "spl"))
+            const dataSPL = await getDocs(initializeData)
+            dataSPL.forEach(element => {
+                const spl = element.data().spl
+                console.log(spl);
+                let foundSPL = spl.find(o => o.status === findStatus);
+                console.log(foundSPL);
+                let splid = element.id
 
-        // Get SPL Data (Based on Status)
-        const bodyTable = document.getElementById('bodyTable');
-        dataSPL.forEach(element => {
-            const spl = element.data().spl
-            console.log(spl);
-            let foundSPL = spl.find(o => o.status === findStatus);
-            console.log(foundSPL);
-            let splid = element.id
+                if (foundSPL) {
+                    bodyTablePrivate.innerHTML += `
+                    <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger">${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnApprove' style='color:#2fcd2c;'><i class="material-icons" data-toggle="tooltip" title="Approve">check_circle</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
+                        </td>
+                    </tr>`
+                }
+            });
 
-            if (foundSPL) {
-                bodyTable.innerHTML += `
+            // Get Private SPL Data (Self-Made by Account)
+            const Table_2_Title = document.getElementById('table2Title');
+            Table_2_Title.innerHTML = '<b>Surat Perintah Lembur Persetujuan Anda</b>'
+            const tablePublic = document.getElementById('dataTable2');
+            tablePublic.innerHTML = `
+            <thead>
                 <tr>
-                    <td>${splid}</td>
-                    <td>${spl[0].tanggal_spl_dibuat}</td>
-                    <td>${spl[0].tanggal_lembur}</td>
-                    <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
-                    <td style='text-transform: capitalize;'><h6><span class="badge badge-danger">${spl[1].status}</span></h6></td>
-                </tr>`
-            }
-        });
+                <th>ID Surat</th>
+                <th>Tanggal Surat</th>
+                <th>Tanggal Lembur</th>
+                <th>Utusan</th>
+                <th>HCBC</th>
+                <th>Status</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id='bodyTable'></tbody>
+            `
+            const bodyTable = document.getElementById('bodyTable');
+            dataSPL.forEach(element => {
+                const spl = element.data().spl
+                console.log(spl);
+                let foundSPL = spl.find(o => o.departemen_head === `${data.id}|${data.name}`);
+                console.log(foundSPL);
+                let splid = element.id
+
+                if (foundSPL) {
+                    bodyTable.innerHTML += `
+                    <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger">${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                        </td>
+                    </tr>`
+                }
+            });
+
+            
+        } else if(data.role == 'general_marketing') {
+            findStatus = 'approved_hcbc'
+        }
+
+        
 
         // Data Table
         $(document).ready(function() {
-            let tablePrivate = $('#dataTablePrivate').DataTable({
+            let tablePrivate = $('#dataTable1').DataTable({
                 retrieve: true,
                 lengthMenu: [5, 10, 20, 50, 100, 200, 500],
                 "columnDefs": [
@@ -165,7 +227,7 @@ const splPage = {
                  'order': [[1, 'asc']]
             });
 
-            let table = $('#dataTable').DataTable({
+            let table = $('#dataTable2').DataTable({
                 retrieve: true,
                 lengthMenu: [5, 10, 20, 50, 100, 200, 500],
                 "columnDefs": [
@@ -175,7 +237,7 @@ const splPage = {
             });
           });
 
-        // Delete User
+        // Delete Button
         const btnsDelete = document.querySelectorAll('#btnDelete');
         btnsDelete.forEach(btn => {
             btn.addEventListener('click', async (e) => {

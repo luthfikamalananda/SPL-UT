@@ -102,7 +102,7 @@ const splSetupPage = {
 
             // Adding Data to Variables
             processedInput.push({tanggal_lembur:newDateFormat, tanggal_spl_dibuat:today})
-            processedInput.push({status:'diajukan', departemen_head:`${dataDepartemenHead.id}|${dataDepartemenHead.name}`})
+            processedInput.push({status:'diajukan_ke_hcbc', departemen_head:`${dataDepartemenHead.id}|${dataDepartemenHead.name}`})
 
             // Looping ID from Local Storage Karyawan to get the Input
             dataKaryawan.forEach((karyawan) => {
