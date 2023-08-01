@@ -126,17 +126,16 @@ const splSetupPage = {
                 processedInput.push(data)
             })
             console.log(processedInput);
-            const nanoid = customAlphabet('1234567890', 5)
 
             // Check if ID for SPL Already Exist
             let counter = 0;
-            let docRef = doc(db, "spl", `spl_${today}_${counter}`)
+            let docRef = doc(db, "spl", `SPL_${today}_${counter}`)
             
             const incrementID = async () => {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.data() == undefined) {
                     try {
-                        await setDoc(doc(db, 'spl', `spl_${today}_${counter}`), {
+                        await setDoc(doc(db, 'spl', `SPL_${today}_${counter}`), {
                             spl: processedInput
                         })
                         Swal.fire({
@@ -161,7 +160,7 @@ const splSetupPage = {
                     console.log('NON-EXIST', counter);
                 } else {
                     counter++
-                    docRef = doc(db, "spl", `spl_${today}_${counter}`)
+                    docRef = doc(db, "spl", `SPL_${today}_${counter}`)
                     console.log('EXIST', counter);
                     incrementID();
                 }

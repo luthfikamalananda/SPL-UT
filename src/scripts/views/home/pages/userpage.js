@@ -10,10 +10,11 @@ const userPage = {
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>Tabel <b>Perintah Lembur</b></h2>
+                            <h2>Surat <b>Perintah Lembur</b></h2>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-success" data-toggle="modal"><span>120 MENIT</span></a>
+                            <a class="btn btn-success" ><span>00 MENIT</span></a>
+                            <a class="btn btn-success" ><span>120 JAM</span></a>
                         </div>
                     </div>
                 </div>
