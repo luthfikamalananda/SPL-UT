@@ -27,7 +27,7 @@ const homePage = {
                                 <table class="table" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                        <th style='max-width:50px;'><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                                        <th style='max-width:50px;' id='checkboxth'><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Jam Lembur</th>
@@ -57,6 +57,11 @@ const homePage = {
         const data = JSON.parse(user)
         if (data.role == 'karyawan') {
             window.location.href = '/#/user'
+        } else if(data.role != "departemen_head" && data.role != "admin") {
+            const checkBoxes = document.getElementById('checkboxth');
+            checkBoxes.setAttribute('style', 'display:none;')
+            const btnSave = document.getElementById('save-btn');
+            btnSave.setAttribute('style', 'display:none;')
         }
 
         // Initialize Database
@@ -72,12 +77,21 @@ const homePage = {
         const userData = await getDocs(initializeData)
         userData.forEach(user => {
             bodyTable.innerHTML += `<tr>
-            <td>${user.id}|${user.data().name}</td>
+            <td class='checkboxtd'>${user.id}|${user.data().name}</td>
             <td>${user.data().name}</td>
             <td>${user.data().email}</td>
             <td>${user.data().jam_lembur} Jam</td>
             <td>${user.data().last_login}</td>
-        </tr>`
+            </tr>`
+            // Authentication
+            if (data.role != "departemen_head" && data.role != "admin") {
+                const checkBoxTD = document.querySelectorAll('.checkboxtd')
+                console.log('cekbok', checkBoxTD);
+                checkBoxTD.forEach((e) => {
+                    e.setAttribute('style', 'display:none;')
+                    console.log(e);
+                })
+            }
         });
 
         // Data Tables
@@ -105,7 +119,6 @@ const homePage = {
                 window.location.href = '#/splsetup';
             })
           });
-
     }
 }
 export default homePage;

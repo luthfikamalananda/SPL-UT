@@ -222,3 +222,6 @@ table.table .avatar {
 .modal form label {
 	font-weight: normal;
 }	
+.hide {
+	display: none;
+}
