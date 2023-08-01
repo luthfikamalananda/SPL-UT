@@ -1,6 +1,7 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
 import { collection, getFirestore, query, where, getDocs, setDoc, doc } from "firebase/firestore";
+import { nanoid, customAlphabet } from "nanoid";
 
 const splSetupPage = {
     async render(){
@@ -23,8 +24,12 @@ const splSetupPage = {
                         </div>
                         </div>
                         <div class="card-body">
-                            <div class="table-responsive" style='margin:0;overflow-x:hidden;'>
-                            <form id='formSetupSPL' action="#" method='post'>
+                        <form id='formSetupSPL' action="#" method='post'>
+                            <label for='hariInput' style='width:100%;text-align:center;'><b>--- MASUKKAN HARI DI BAWAH ---</b></label>
+                            <input type="date" class="form-control" required id='hariInput' name='hariInput' style='margin-bottom:10px;'>
+                            <div class="table-responsive" style='margin:0;'>
+                            
+                            
                                     <table class="table" id="dataTablesetup" width="100%" cellspacing="0" >
                                         <thead>
                                             <tr>
@@ -66,33 +71,22 @@ const splSetupPage = {
             <tr>
                 <td>${user.id}</td>
                 <td>${user.name}</td>
-                <td><input type="datetime-local" data-id="${user.id}" class="form-control" required id='waktuMulaiInput' name='waktuMulaiInput'></td>
-                <td><input type="datetime-local" data-id="${user.id}" class="form-control" required id='waktuSelesaiInput' name='waktuSelesaiInput'></td>
+                <td><input type="time" data-id="${user.id}" class="form-control" required id='waktuMulaiInput' name='waktuMulaiInput'></td>
+                <td><input type="time" data-id="${user.id}" class="form-control" required id='waktuSelesaiInput' name='waktuSelesaiInput'></td>
                 <td><input type="text" data-id="${user.id}" class="form-control" required id='keteranganInput' name='keteranganInput'></td>
             </tr>`
         });
 
         // Get The Values
-        // const formSetupSPL = document.getElementById('formSetupSPL');
-        // let processedInput = [];
-        // formSetupSPL.addEventListener('submit', (e) => {
-        //     e.preventDefault();
-        //     const waktuMulaiInput = document.querySelectorAll('#waktuMulaiInput');
-        //     waktuMulaiInput.forEach((element) => {
-        //         const data = {
-                    
-        //         }
-        //         const userID = element.getAttribute('data-id')
-        //         console.log('data-id', userID, 'value', element.value);
-        //     })
-        // })
-        
         const formSetupSPL = document.getElementById('formSetupSPL');
         let processedInput = [];
-        formSetupSPL.addEventListener('submit', (e) => {
+        formSetupSPL.addEventListener('submit', async (e) => {
             e.preventDefault();
             const waktuMulaiInput = document.querySelectorAll('#waktuMulaiInput');
             const waktuSelesaiInput = document.querySelectorAll('#waktuSelesaiInput');
+            const hariInput = document.getElementById('hariInput');
+            processedInput.push({tanggal:hariInput.value})
+            processedInput.push({status:'diajukan'})
             dataKaryawan.forEach((karyawan) => {
                 let waktuMulai;
                 let waktuSelesai;
@@ -111,8 +105,24 @@ const splSetupPage = {
                     waktu_mulai: waktuMulai,
                     waktu_selesai: waktuSelesai,
                 }
-                console.log('kalkulasi', data);
+                processedInput.push(data)
             })
+            console.log(processedInput);
+            const nanoid = customAlphabet('1234567890', 5)
+            await setDoc(doc(db, 'spl', `spl_${nanoid()}`), {
+                spl: processedInput
+            })
+            Swal.fire({
+                icon: 'success',
+                title: 'Pengajuan SPL Berhasil',
+                text: 'Surat Perintah Lembur sudah diajukan, silahkan menunggu konfirmasi HCBC',
+                showCloseButton: true,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                    window.location.href = '#/'
+                    } 
+                })
         })
 
 
