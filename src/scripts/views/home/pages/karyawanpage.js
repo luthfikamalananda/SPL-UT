@@ -2,7 +2,7 @@ import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
 import { collection, getFirestore, query, where, getDocs } from "firebase/firestore";
 
-const userPage = {
+const karyawanPage = {
     async render(){
         return `<div class="container-xl">
         <div class="table-responsive">
@@ -114,4 +114,4 @@ const userPage = {
           });
     }
 }
-export default userPage;
+export default karyawanPage;

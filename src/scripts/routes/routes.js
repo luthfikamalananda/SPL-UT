@@ -11,7 +11,7 @@
 // import editPassword from "../views/home/pages/editPassword";
 // import editProfile from "../views/home/pages/editProfile";
 // import favourite from "../views/home/pages/favourite";
-import userPage from "../views/home/pages/userpage";
+import karyawanPage from "../views/home/pages/karyawanpage";
 import adminPage from "../views/home/pages/adminpage";
 import homePage from "../views/home/pages/homepage";
 import mainLogin from "../views/login/pages/main-login";
@@ -40,7 +40,7 @@ const loginRoutes ={
 const homeRoutes = {
   '/': homePage,
   '/admin': adminPage,
-  '/user': userPage,
+  '/karyawan': karyawanPage,
   '/splsetup': splSetupPage
   // '/profile': profile,
   // '/profile/:id': otherProfile,
