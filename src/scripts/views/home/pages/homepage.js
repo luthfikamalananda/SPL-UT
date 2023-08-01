@@ -56,7 +56,7 @@ const homePage = {
         const user = localStorage.getItem('user');
         const data = JSON.parse(user)
         if (data.role == 'karyawan') {
-            window.location.href = '/#/karyawan'
+            window.location.href = '/#/user'
         }
 
         // Initialize Database
@@ -83,13 +83,13 @@ const homePage = {
         // Data Tables
         $(document).ready(function() {
             let table = $('#dataTable').DataTable({
+                retrieve: true,
                 'columnDefs': [{
                     'targets': 0,
                     'checkboxes': {
                         'selectRow': true
                     },
                  }],
-                 retrieve: true,
                  'order': [[1, 'asc']]
             });
 
