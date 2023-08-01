@@ -67,6 +67,7 @@ const mainLogin = {
             e.preventDefault()
             const InputEmail = document.getElementById('InputEmail').value;
             const InputPassword = document.getElementById('InputPassword').value;
+            
             // get Date
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');

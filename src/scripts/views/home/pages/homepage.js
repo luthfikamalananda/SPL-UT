@@ -65,7 +65,7 @@ const homePage = {
         const userData = await getDocs(initializeData)
         userData.forEach(user => {
             bodyTable.innerHTML += `<tr>
-            <td>${user.id}/${user.data().name}</td>
+            <td>${user.id}|${user.data().name}</td>
             <td>${user.data().name}</td>
             <td>${user.data().email}</td>
             <td>${user.data().jam_lembur} Jam</td>
@@ -90,7 +90,7 @@ const homePage = {
                 let selected_rows = table.column(0).checkboxes.selected()
                 let idKaryawan = [];
                 $.each(selected_rows, function (key, data) {
-                    let objectIDKaryawan = {id: data.substring(0, data.indexOf('/')), name: data.substring(data.indexOf('/')+1)}
+                    let objectIDKaryawan = {id: data.substring(0, data.indexOf('|')), name: data.substring(data.indexOf('|')+1)}
                     idKaryawan.push(objectIDKaryawan)
                     localStorage.setItem('idKaryawan', JSON.stringify(idKaryawan));
                 })

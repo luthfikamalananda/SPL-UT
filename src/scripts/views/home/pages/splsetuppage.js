@@ -1,6 +1,6 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { collection, getFirestore, query, where, getDocs, setDoc, doc } from "firebase/firestore";
+import { collection, getFirestore, query, where, getDoc, setDoc, doc } from "firebase/firestore";
 import { nanoid, customAlphabet } from "nanoid";
 
 const splSetupPage = {
@@ -66,6 +66,7 @@ const splSetupPage = {
 
         // Read All User
         const dataKaryawan = JSON.parse(localStorage.getItem('idKaryawan'))
+        const dataDepartemenHead = JSON.parse(localStorage.getItem('user'))
         dataKaryawan.forEach(user => {
             bodyTable.innerHTML += `
             <tr>
@@ -82,11 +83,28 @@ const splSetupPage = {
         let processedInput = [];
         formSetupSPL.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // get Today's Date
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            today = dd + '-' + mm + '-' + yyyy;
+
+            // get User Input
             const waktuMulaiInput = document.querySelectorAll('#waktuMulaiInput');
             const waktuSelesaiInput = document.querySelectorAll('#waktuSelesaiInput');
             const hariInput = document.getElementById('hariInput');
-            processedInput.push({tanggal:hariInput.value})
-            processedInput.push({status:'diajukan'})
+
+            // Reformatting Date
+            let dateArray=hariInput.value.split('-')    
+            let newDateFormat=`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`
+
+            // Adding Data to Variables
+            processedInput.push({tanggal_lembur:newDateFormat, tanggal_spl_dibuat:today})
+            processedInput.push({status:'diajukan', departemen_head:`${dataDepartemenHead.id}|${dataDepartemenHead.name}`})
+
+            // Looping ID from Local Storage Karyawan to get the Input
             dataKaryawan.forEach((karyawan) => {
                 let waktuMulai;
                 let waktuSelesai;
@@ -109,20 +127,48 @@ const splSetupPage = {
             })
             console.log(processedInput);
             const nanoid = customAlphabet('1234567890', 5)
-            await setDoc(doc(db, 'spl', `spl_${nanoid()}`), {
-                spl: processedInput
-            })
-            Swal.fire({
-                icon: 'success',
-                title: 'Pengajuan SPL Berhasil',
-                text: 'Surat Perintah Lembur sudah diajukan, silahkan menunggu konfirmasi HCBC',
-                showCloseButton: true,
-                }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                    window.location.href = '#/'
-                    } 
-                })
+
+            // Check if ID for SPL Already Exist
+            let counter = 0;
+            let docRef = doc(db, "spl", `spl_${today}_${counter}`)
+            
+            const incrementID = async () => {
+                const docSnap = await getDoc(docRef);
+                if (docSnap.data() == undefined) {
+                    try {
+                        await setDoc(doc(db, 'spl', `spl_${today}_${counter}`), {
+                            spl: processedInput
+                        })
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Pengajuan SPL Berhasil',
+                            text: 'Surat Perintah Lembur sudah diajukan, silahkan menunggu konfirmasi HCBC',
+                            showCloseButton: true,
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                            window.location.href = '#/'
+                            } 
+                        })
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Pengajuan SPL Gagal',
+                            text: error,
+                            showCloseButton: true,
+                        })
+                    }
+                    console.log('NON-EXIST', counter);
+                } else {
+                    counter++
+                    docRef = doc(db, "spl", `spl_${today}_${counter}`)
+                    console.log('EXIST', counter);
+                    incrementID();
+                }
+            }
+
+            // Calling the function
+            incrementID();
         })
 
 
