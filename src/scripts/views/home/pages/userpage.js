@@ -63,15 +63,21 @@ const userPage = {
     },
 
     async afterRender(){
+         // get Local Storage
+         const user = localStorage.getItem('user');
+         const data = JSON.parse(user)
+         const uid = data.id;
+
+        // Authentication
+        if (data.role != 'karyawan') {
+            window.location.href = './#/'
+        }
+
         // Initialize Database
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
 
-        // get Local Storage
-        const user = localStorage.getItem('user');
-        const data = JSON.parse(user)
-        const uid = data.id;
-
+        // Get SPL Data
         const bodyTable = document.getElementById('bodyTable');
         const initializeData = query(collection(db, "spl"))
         const dataSPL = await getDocs(initializeData)
