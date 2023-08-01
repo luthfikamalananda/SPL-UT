@@ -33,7 +33,6 @@ window.addEventListener('load', () => {
     const user = localStorage.getItem('user');
     const data = JSON.parse(user)
     const uid = data.id;
-    console.log(uid);
 
     const userName = document.getElementById('userName');
     userName.innerText = data.name
@@ -47,7 +46,6 @@ window.addEventListener('load', () => {
     const docRef = doc(db, "user", uid);
     const docSnap = await getDoc(docRef);
     const role = docSnap.data().role
-    console.log(role);
 
     if (role == 'admin') {
       const adminPage = document.getElementById('adminPage');

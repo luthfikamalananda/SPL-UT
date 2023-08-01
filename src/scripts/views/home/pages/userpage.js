@@ -21,23 +21,16 @@ const userPage = {
                 <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Nama</th>
-                            <th>Email</th>
+                            <th>ID Surat</th>
+                            <th>Tanggal Surat</th>
                             <th>Tanggal Lembur</th>
                             <th>Jam Lembur</th>
-                            <th>Actions</th>
+                            <th>Utusan</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id='bodyTable'>
-                        <tr>
-                            <td>Thomas Hardy</td>
-                            <td>thomashardy@mail.com</td>
-                            <td>28 April 2002</td>
-                            <td>17.00 - 18.00</td>
-                            <td>
-                                <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                            </td>
-                        </tr> 
+                        
                     </tbody>
                 </table>
             </div>
@@ -70,6 +63,40 @@ const userPage = {
     },
 
     async afterRender(){
+        // Initialize Database
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+
+        // get Local Storage
+        const user = localStorage.getItem('user');
+        const data = JSON.parse(user)
+        const uid = data.id;
+
+        const bodyTable = document.getElementById('bodyTable');
+        const initializeData = query(collection(db, "spl"))
+        const dataSPL = await getDocs(initializeData)
+        dataSPL.forEach(element => {
+            const spl = element.data().spl
+            console.log(spl);
+            let foundSPL = spl.find(o => o.id_karyawan === uid);
+            let splid = element.id
+            
+            if (foundSPL) {
+                console.log('ketemu', foundSPL);
+                bodyTable.innerHTML += `
+                <tr>
+                    <td>${splid}</td>
+                    <td>${spl[0].tanggal_spl_dibuat}</td>
+                    <td>${spl[0].tanggal_lembur}</td>
+                    <td>${foundSPL.waktu_mulai} - ${foundSPL.waktu_selesai}</td>
+                    <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                    <td style='text-transform: capitalize;'><h6><span class="badge badge-danger">${spl[1].status}</span></h6></td>
+                </tr>`
+            }
+            
+        });
+
+        // Data Table
         $(document).ready(function() {
             let table = $('#dataTable').DataTable({
                 retrieve: true,
@@ -79,18 +106,6 @@ const userPage = {
                  'order': [[1, 'asc']]
             });
           });
-
-        const app = initializeApp(firebaseConfig)
-        const db = getFirestore(app)
-
-        const initializeData = query(collection(db, "user"), where("role", "!=", "admin"))
-        const userData = await getDocs(initializeData)
-        userData.forEach(user => {
-            console.log(user.id, '=>', user.data());
-        });
-
-          
-        
     }
 }
 export default userPage;
