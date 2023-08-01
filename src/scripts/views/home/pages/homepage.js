@@ -56,7 +56,7 @@ const homePage = {
         const user = localStorage.getItem('user');
         const data = JSON.parse(user)
         if (data.role == 'karyawan') {
-            window.location.href = '/#/user'
+            window.location.href = '/#/karyawan'
         } else if(data.role != "departemen_head" && data.role != "admin") {
             const checkBoxes = document.getElementById('checkboxth');
             checkBoxes.setAttribute('style', 'display:none;')

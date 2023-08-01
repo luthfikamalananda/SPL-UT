@@ -63,6 +63,10 @@ const karyawanPage = {
     },
 
     async afterRender(){
+        // Change Navbar
+        const navBar = document.getElementById('navDashboard');
+        navBar.innerText = 'Dashboard'
+
          // get Local Storage
          const user = localStorage.getItem('user');
          const data = JSON.parse(user)
