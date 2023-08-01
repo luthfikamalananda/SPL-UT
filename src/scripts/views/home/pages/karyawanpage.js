@@ -64,6 +64,8 @@ const karyawanPage = {
 
     async afterRender(){
         // Change Navbar
+        const daftarKaryawan = document.getElementById('navDaftarKaryawan');
+        daftarKaryawan.setAttribute('style', 'display:none;')
         const navBar = document.getElementById('navDashboard');
         navBar.innerText = 'Dashboard'
 
