@@ -56,13 +56,16 @@ const homePage = {
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
 
+        // Destroy Local Storage
+        localStorage.removeItem('idKaryawan')
+
         // Read All User
         const bodyTable = document.getElementById('bodyTable');
         const initializeData = query(collection(db, "user"), where("role", "==", "karyawan"))
         const userData = await getDocs(initializeData)
         userData.forEach(user => {
             bodyTable.innerHTML += `<tr>
-            <td>${user.id}</td>
+            <td>${user.id}/${user.data().name}</td>
             <td>${user.data().name}</td>
             <td>${user.data().email}</td>
             <td>${user.data().jam_lembur} Jam</td>
@@ -85,11 +88,14 @@ const homePage = {
 
             $('#save-btn').on('click',function(){
                 let selected_rows = table.column(0).checkboxes.selected()
-                let idKaryawan = []
-                $.each(selected_rows, function (key, UID) {
-                    idKaryawan.push(UID)
-                    localStorage.setItem('idKaryawan', idKaryawan)
+                let idKaryawan = [];
+                $.each(selected_rows, function (key, data) {
+                    let objectIDKaryawan = {id: data.substring(0, data.indexOf('/')), name: data.substring(data.indexOf('/')+1)}
+                    idKaryawan.push(objectIDKaryawan)
+                    localStorage.setItem('idKaryawan', JSON.stringify(idKaryawan));
                 })
+                console.log(idKaryawan);
+                window.location.href = '#/splsetup';
             })
           });
 

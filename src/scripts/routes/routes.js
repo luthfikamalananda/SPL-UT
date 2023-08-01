@@ -15,6 +15,7 @@ import userPage from "../views/home/pages/userpage";
 import adminPage from "../views/home/pages/adminpage";
 import homePage from "../views/home/pages/homepage";
 import mainLogin from "../views/login/pages/main-login";
+import splSetupPage from "../views/home/pages/splsetuppage";
 
 // import otherProfile from "../views/home/pages/otherProfile";
 // import profile from "../views/home/pages/profile";
@@ -40,6 +41,7 @@ const homeRoutes = {
   '/': homePage,
   '/admin': adminPage,
   '/user': userPage,
+  '/splsetup': splSetupPage
   // '/profile': profile,
   // '/profile/:id': otherProfile,
   // '/editprofile': editProfile,
