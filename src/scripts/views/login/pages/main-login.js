@@ -59,8 +59,6 @@ const mainLogin = {
     async afterRender(){
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        console.log('auth:', auth.currentUser);
         const db = getFirestore(app);
 
         
@@ -69,6 +67,12 @@ const mainLogin = {
             e.preventDefault()
             const InputEmail = document.getElementById('InputEmail').value;
             const InputPassword = document.getElementById('InputPassword').value;
+            // get Date
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            today = dd + '-' + mm + '-' + yyyy;
             
             let user = '';
             const q = query(collection(db, "user"), where("email", "==", InputEmail))
@@ -83,12 +87,12 @@ const mainLogin = {
                     const dataToDB = {
                         id: user.id,
                         role: user.role,
-                        last_login: new Date().toISOString().split('T')[0],
+                        last_login: today,
                         email: user.email,
                         name: user.name,
                     }
                     await updateDoc(doc(db,"user", user.id), {
-                        last_login: new Date().toISOString().split('T')[0],
+                        last_login: today,
                     })
         
                     localStorage.setItem('user', JSON.stringify(dataToDB))
