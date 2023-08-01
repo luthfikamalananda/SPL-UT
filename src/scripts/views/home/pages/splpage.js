@@ -121,7 +121,15 @@ const splPage = {
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                         </td>
                     </tr>`
+
+                    if (foundSPL.status != findStatus) {
+                        const btnDelete = document.getElementById('btnDelete')
+                        btnDelete.setAttribute('id', '')
+                        btnDelete.innerHTML = `<h6><span class="badge badge-danger">SUDAH DIPROSES</span></h6>`
+                    }
                 }
+
+                
             });
 
             // Get SPL Data (Based on Status)
