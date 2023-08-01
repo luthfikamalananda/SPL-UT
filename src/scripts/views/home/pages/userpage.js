@@ -71,6 +71,7 @@ const userPage = {
     async afterRender(){
         $(document).ready(function() {
             let table = $('#dataTable').DataTable({
+                retrieve: true,
                 "columnDefs": [
                     { "width": "20%", "targets": 0}
                 ],

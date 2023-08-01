@@ -52,8 +52,8 @@ window.addEventListener('load', () => {
     if (role == 'admin') {
       const adminPage = document.getElementById('adminPage');
       adminPage.style.removeProperty('display')
-    }
-
+    } 
+    
   } else {
     window.location.href = '/login';
   }

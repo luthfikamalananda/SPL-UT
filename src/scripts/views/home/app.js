@@ -11,7 +11,6 @@ class AppHome {
     try {
       const url = UrlParser.parseActiveUrlWithCombiner();
       const page = homeRoutes[url];
-      // console.log('homepage route:',page);
       this._maincontent.innerHTML = await page.render();
       await page.afterRender();
     } catch (error) {

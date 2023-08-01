@@ -124,6 +124,13 @@ const adminPage = {
     },
 
     async afterRender(){
+        // Authentication
+        const user = localStorage.getItem('user');
+        const data = JSON.parse(user)
+        if (data.role != 'admin') {
+            window.location.href = './'
+        }
+        
         // Initialize Database
         const app = initializeApp(firebaseConfig)
         const db = getFirestore(app)
