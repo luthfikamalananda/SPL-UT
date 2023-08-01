@@ -1,6 +1,6 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { collection, getFirestore, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, getFirestore, query, where, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 
 const splPage = {
     async render(){
@@ -18,7 +18,7 @@ const splPage = {
                             <th>ID Surat</th>
                             <th>Tanggal Surat</th>
                             <th>Tanggal Lembur</th>
-                            <th>Utusan</th>
+                            <th>Departemen Head</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -48,7 +48,7 @@ const splPage = {
                             <th>ID Surat</th>
                             <th>Tanggal Surat</th>
                             <th>Tanggal Lembur</th>
-                            <th>Utusan</th>
+                            <th>Departemen Head</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -135,7 +135,7 @@ const splPage = {
                 <th>ID Surat</th>
                 <th>Tanggal Surat</th>
                 <th>Tanggal Lembur</th>
-                <th>Utusan</th>
+                <th>Departemen Head</th>
                 <th>Status</th>
                 <th>Actions</th>
                 </tr>
@@ -168,6 +168,55 @@ const splPage = {
                 }
             });
 
+            // Approve Button
+            const btnsApprove = document.querySelectorAll('#btnApprove');
+            btnsApprove.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const dataid = btn.getAttribute('data-id');
+
+                    const docSnap = await getDoc(doc(db, 'spl', dataid))
+                    const objSPL = docSnap.data().spl;
+                    console.log(objSPL);
+                    objSPL[1].hcbc = `${data.id}|${data.name}` // Add HCBC in index 1
+                    objSPL[1].status = 'diajukan_ke_gm' // Add Status in index 1
+
+                    Swal.fire({
+                        title: 'SPL ini akan Anda Approve? ',
+                        showCancelButton: true,
+                        confirmButtonText: 'Konfirmasi',
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            try {
+                                await setDoc(doc(db, 'spl', dataid), {
+                                    spl:objSPL
+                                });
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Approve Berhasil',
+                                    text: 'Selamat SPL berhasil anda Approve',
+                                    showCloseButton: true,
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                        location.reload();
+                                        } 
+                                    })
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Approve Gagal',
+                                    text: error,
+                                    showCloseButton: true,
+                                    allowOutsideClick: false
+                                    })
+                            }   
+                        }
+                    });
+                })
+            });
+            //--------------------------------- REJECT BUTTON ----------------------------------
+
             // Get Private SPL Data (Self-Made by Account)
             const Table_2_Title = document.getElementById('table2Title');
             Table_2_Title.innerHTML = '<b>Surat Perintah Lembur Persetujuan Anda</b>'
@@ -178,7 +227,7 @@ const splPage = {
                 <th>ID Surat</th>
                 <th>Tanggal Surat</th>
                 <th>Tanggal Lembur</th>
-                <th>Utusan</th>
+                <th>Departemen Head</th>
                 <th>HCBC</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -190,7 +239,7 @@ const splPage = {
             dataSPL.forEach(element => {
                 const spl = element.data().spl
                 console.log(spl);
-                let foundSPL = spl.find(o => o.departemen_head === `${data.id}|${data.name}`);
+                let foundSPL = spl.find(o => o.hcbc === `${data.id}|${data.name}`);
                 console.log(foundSPL);
                 let splid = element.id
 
@@ -201,12 +250,61 @@ const splPage = {
                         <td>${spl[0].tanggal_spl_dibuat}</td>
                         <td>${spl[0].tanggal_lembur}</td>
                         <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger">${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
-                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
                         </td>
                     </tr>`
                 }
+            });
+
+            // Undo Button
+            const btnsRestore = document.querySelectorAll('#btnRestore');
+            btnsRestore.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const dataid = btn.getAttribute('data-id');
+
+                    const docSnap = await getDoc(doc(db, 'spl', dataid))
+                    const objSPL = docSnap.data().spl;
+                    console.log(objSPL);
+                    delete objSPL[1].hcbc // Remove HCBC in index 1
+                    objSPL[1].status = 'diajukan_ke_hcbc' // Restore Status in index 1
+
+                    Swal.fire({
+                        title: 'Anda yakin ingin mengembalikan status SPL ini?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Konfirmasi',
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            try {
+                                await setDoc(doc(db, 'spl', dataid), {
+                                    spl:objSPL
+                                });
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Pengembalian Berhasil',
+                                    text: 'SPL dapat anda approve/reject lagi',
+                                    showCloseButton: true,
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                        location.reload();
+                                        } 
+                                    })
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Pengembalian Gagal',
+                                    text: error,
+                                    showCloseButton: true,
+                                    allowOutsideClick: false
+                                    })
+                            }   
+                        }
+                    });
+                })
             });
 
             
