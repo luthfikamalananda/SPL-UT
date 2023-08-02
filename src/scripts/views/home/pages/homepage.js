@@ -30,7 +30,7 @@ const homePage = {
                                         <th style='max-width:50px;' id='checkboxth'><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>Jam Lembur</th>
+                                            <th>Sisa Durasi Lembur</th>
                                             <th>Terakhir Login</th>
                                         </tr>
                                     </thead>
@@ -76,11 +76,13 @@ const homePage = {
         const initializeData = query(collection(db, "user"), where("role", "==", "karyawan"))
         const userData = await getDocs(initializeData)
         userData.forEach(user => {
+            let jamLembur = Math.floor(parseInt(user.data().jam_lembur) / 60)
+            let menitLembur = parseInt(user.data().jam_lembur) % 60
             bodyTable.innerHTML += `<tr>
             <td class='checkboxtd'>${user.id}|${user.data().name}</td>
             <td>${user.data().name}</td>
             <td>${user.data().email}</td>
-            <td>${user.data().jam_lembur} Jam</td>
+            <td>${jamLembur} Jam ${menitLembur} Menit</td>
             <td>${user.data().last_login}</td>
             </tr>`
             // Authentication
