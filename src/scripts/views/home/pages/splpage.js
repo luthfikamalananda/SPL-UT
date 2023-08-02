@@ -890,7 +890,7 @@ const splPage = {
             });
         }
 
-
+        // Badges Color
         const statusBadges = document.querySelectorAll('#badgeStatus')
         statusBadges.forEach((badge) => {
             if (badge.innerText == 'APPROVED') {

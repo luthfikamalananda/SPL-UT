@@ -121,11 +121,26 @@ const karyawanPage = {
                     <td>${spl[0].tanggal_lembur}</td>
                     <td>${foundSPL.waktu_mulai} - ${foundSPL.waktu_selesai}</td>
                     <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
-                    <td style='text-transform: capitalize;'><h6><span class="badge badge-danger">${spl[1].status}</span></h6></td>
+                    <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                 </tr>`
             }
-            
         });
+
+        // Badges Color
+        const statusBadges = document.querySelectorAll('#badgeStatus')
+        statusBadges.forEach((badge) => {
+            if (badge.innerText == 'APPROVED') {
+                badge.setAttribute('class', 'badge badge-success')
+            } else if (badge.innerText == 'DITOLAK OLEH HCBC') {
+                badge.setAttribute('class', 'badge badge-danger')
+            } else if (badge.innerText == 'DITOLAK OLEH GM') {
+                badge.setAttribute('class', 'badge badge-danger')
+            } else if (badge.innerText == 'DITOLAK OLEH DHHC') {
+                badge.setAttribute('class', 'badge badge-danger')
+            } else {
+                badge.setAttribute('class', 'badge badge-primary')
+            }
+        })
 
         // Data Table
         $(document).ready(function() {
