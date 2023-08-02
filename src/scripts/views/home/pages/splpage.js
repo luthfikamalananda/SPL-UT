@@ -888,6 +888,8 @@ const splPage = {
                     });
                 })
             });
+        } else if (data.role == 'karyawan'){
+            window.location.href = './'
         }
 
         // Badges Color

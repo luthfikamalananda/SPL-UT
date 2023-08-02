@@ -291,7 +291,7 @@ const adminPage = {
                 last_login: 'Belum Login'
             }
             if (role.value == 'karyawan') {
-                data.jam_lembur = 120
+                data.jam_lembur = 7200
             }
             try {
                 await setDoc(doc(db, "user", `${role.value}_${nanoid()}`), data)

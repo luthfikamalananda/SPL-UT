@@ -1,6 +1,6 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
-import { collection, getFirestore, query, where, getDocs } from "firebase/firestore";
+import { collection, getFirestore, query, doc, getDocs, getDoc } from "firebase/firestore";
 
 const karyawanPage = {
     async render(){
@@ -15,8 +15,8 @@ const karyawanPage = {
                         <h2>Surat <b>Perintah Lembur</b></h2>
                         </div>
                         <div class="col-sm-6">
-                            <a class="btn btn-success" ><span>00 MENIT</span></a>
-                            <a class="btn btn-success" ><span>120 JAM</span></a>
+                            <a class="btn btn-success" ><span id='menitLembur'>00 MENIT</span></a>
+                            <a class="btn btn-success" ><span id='jamLembur'>120 JAM</span></a>
                         </div>
                     </div>
                 </div>
@@ -49,15 +49,6 @@ const karyawanPage = {
     </div>
     <!-- End of Main Content -->
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
     <!-- Delete Modal HTML -->
     <div id="deleteEmployeeModal" class="modal fade">
         <div class="modal-dialog">
@@ -83,27 +74,40 @@ const karyawanPage = {
 
     async afterRender(){
         // Change Navbar
-        const daftarKaryawan = document.getElementById('navDaftarKaryawan');
+        const daftarKaryawan = document.getElementById('nonAdminPage');
         daftarKaryawan.setAttribute('style', 'display:none;')
         const navBar = document.getElementById('navDashboard');
         navBar.innerText = 'Dashboard'
 
-         // get Local Storage
-         const user = localStorage.getItem('user');
-         const data = JSON.parse(user)
-         const uid = data.id;
+        // Initialize Database
+        const app = initializeApp(firebaseConfig)
+        const db = getFirestore(app)
+
+        // get Local Storage
+        const user = localStorage.getItem('user');
+        const data = JSON.parse(user)
+        const uid = data.id;
+
+        // get User Data from Database
+        const docRef = await getDoc(doc(db, 'user', data.id))
+        const userData = docRef.data();
 
         // Authentication
         if (data.role != 'karyawan') {
             window.location.href = './#/'
         }
 
-        // Initialize Database
-        const app = initializeApp(firebaseConfig)
-        const db = getFirestore(app)
-
         // Get SPL Data
         const bodyTable = document.getElementById('bodyTable');
+        const jamLemburContainer = document.getElementById('jamLembur');
+        const menitLemburContainer = document.getElementById('menitLembur');
+        
+        let jamLembur = Math.floor(parseInt(userData.jam_lembur) / 60)
+        let menitLembur = parseInt(userData.jam_lembur) % 60
+
+        jamLemburContainer.innerText = `${jamLembur} JAM`;
+        menitLemburContainer.innerText = `${menitLembur} MENIT`
+
         const initializeData = query(collection(db, "spl"))
         const dataSPL = await getDocs(initializeData)
         dataSPL.forEach(element => {
