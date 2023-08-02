@@ -615,6 +615,240 @@ const splPage = {
                     });
                 })
             });
+        } else if(data.role == 'departement_head_human_capital') { // ----------------------- GENERAL MARKETING -----------------------
+            findStatus = 'diajukan_ke_dhhc'
+            // Get SPL Data (Based on Status)
+            const Table_1_Title = document.getElementById('table1Title');
+            Table_1_Title.innerHTML = '<b>Surat Perintah Lembur yang Butuh Persetujuan</b>'
+            const tablePrivate = document.getElementById('dataTable1');
+            tablePrivate.innerHTML = `
+            <thead>
+                <tr>
+                <th>ID Surat</th>
+                <th>Tanggal Surat</th>
+                <th>Tanggal Lembur</th>
+                <th>Departemen Head</th>
+                <th>HCBC</th>
+                <th>General Marketing</th>
+                <th>Status</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id='bodyTablePrivate'></tbody>
+            `
+            const bodyTablePrivate = document.getElementById('bodyTablePrivate');
+            const initializeData = query(collection(db, "spl"))
+            const dataSPL = await getDocs(initializeData)
+            dataSPL.forEach(element => {
+                const spl = element.data().spl
+                console.log(spl);
+                let foundSPL = spl.find(o => o.status === findStatus);
+                console.log(foundSPL);
+                let splid = element.id
+
+                if (foundSPL) {
+                    bodyTablePrivate.innerHTML += `
+                    <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
+                        <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnApprove' style='color:#2fcd2c;'><i class="material-icons" data-toggle="tooltip" title="Approve">check_circle</i></a>
+                            <a href="#rejectModal" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
+                        </td>
+                    </tr>`
+                }
+            });
+
+            // Approve Button
+            const btnsApprove = document.querySelectorAll('#btnApprove');
+            btnsApprove.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const dataid = btn.getAttribute('data-id');
+
+                    const docSnap = await getDoc(doc(db, 'spl', dataid))
+                    const objSPL = docSnap.data().spl;
+                    console.log(objSPL);
+                    objSPL[1].departement_head_human_capital = `${data.id}|${data.name}` // Add GM in index 1
+                    objSPL[1].status = 'Approved' // Add Status in index 1
+
+                    Swal.fire({
+                        title: 'SPL ini akan Anda Approve? ',
+                        showCancelButton: true,
+                        confirmButtonText: 'Konfirmasi',
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            try {
+                                await setDoc(doc(db, 'spl', dataid), {
+                                    spl:objSPL
+                                });
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Approve Berhasil',
+                                    text: 'Selamat SPL berhasil anda Approve',
+                                    showCloseButton: true,
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                        location.reload();
+                                        } 
+                                    })
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Approve Gagal',
+                                    text: error,
+                                    showCloseButton: true,
+                                    allowOutsideClick: false
+                                    })
+                            }   
+                        }
+                    });
+                })
+            });
+
+            //--------------------------------- REJECT BUTTON ----------------------------------
+            let idSPLtoEdit = ''
+            const btnsReject = document.querySelectorAll('#btnReject');
+            btnsReject.forEach((btn) => {
+                idSPLtoEdit = btn.getAttribute('data-id');
+            })
+
+            const formReject = document.getElementById('formReject');
+            const reasonInput = document.getElementById('reasonInput');
+            formReject.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const docSnap = await getDoc(doc(db, 'spl', idSPLtoEdit))
+                const objSPL = docSnap.data().spl;
+                console.log(objSPL);
+                objSPL[1].departement_head_human_capital = `${data.id}|${data.name}` // Add HCBC in index 1
+                objSPL[1].status = 'ditolak_oleh_dhhc' // Add Status rejected in index 1
+                objSPL[1].reject_reason = reasonInput.value; // Add reasoning in index 1
+
+                try {
+                    await setDoc(doc(db, 'spl', idSPLtoEdit), {
+                        spl:objSPL
+                    });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Penolakan Berhasil',
+                        text: 'SPL berhasil anda Tolak (Reject)',
+                        showCloseButton: true,
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            location.reload();
+                        } 
+                    })
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Penolakan Gagal',
+                        text: error,
+                        showCloseButton: true,
+                        allowOutsideClick: false
+                    })
+                }
+            } )
+
+            // TABLE 2 ---- Get Private SPL Data (Self-Made by Account)
+            const Table_2_Title = document.getElementById('table2Title');
+            Table_2_Title.innerHTML = '<b>Surat Perintah Lembur Persetujuan Anda</b>'
+            const tablePublic = document.getElementById('dataTable2');
+            tablePublic.innerHTML = `
+            <thead>
+                <tr>
+                <th>ID Surat</th>
+                <th>Tanggal Surat</th>
+                <th>Tanggal Lembur</th>
+                <th>Departemen Head</th>
+                <th>HCBC</th>
+                <th>General Marketing</th>
+                <th>Status</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id='bodyTable'></tbody>
+            `
+            const bodyTable = document.getElementById('bodyTable');
+            dataSPL.forEach(element => {
+                const spl = element.data().spl
+                console.log(spl);
+                let foundSPL = spl.find(o => o.departement_head_human_capital === `${data.id}|${data.name}`);
+                console.log(foundSPL);
+                let splid = element.id
+
+                if (foundSPL) {
+                    bodyTable.innerHTML += `
+                    <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
+                        <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
+                        </td>
+                    </tr>`
+                }
+            });
+
+            // Undo Button
+            const btnsRestore = document.querySelectorAll('#btnRestore');
+            btnsRestore.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const dataid = btn.getAttribute('data-id');
+
+                    const docSnap = await getDoc(doc(db, 'spl', dataid))
+                    const objSPL = docSnap.data().spl;
+                    console.log(objSPL);
+                    delete objSPL[1].departement_head_human_capital
+                    delete objSPL[1].reject_reason // Remove reject_reason in index 1
+                    objSPL[1].status = 'diajukan_ke_dhhc' // Restore Status in index 1
+
+                    Swal.fire({
+                        title: 'Anda yakin ingin mengembalikan status SPL ini?',
+                        showCancelButton: true,
+                        confirmButtonText: 'Konfirmasi',
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            try {
+                                await setDoc(doc(db, 'spl', dataid), {
+                                    spl:objSPL
+                                });
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Pengembalian Berhasil',
+                                    text: 'SPL dapat anda approve/reject lagi',
+                                    showCloseButton: true,
+                                    }).then((result) => {
+                                        /* Read more about isConfirmed, isDenied below */
+                                        if (result.isConfirmed) {
+                                        location.reload();
+                                        } 
+                                    })
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Pengembalian Gagal',
+                                    text: error,
+                                    showCloseButton: true,
+                                    allowOutsideClick: false
+                                    })
+                            }   
+                        }
+                    });
+                })
+            });
         }
 
 
