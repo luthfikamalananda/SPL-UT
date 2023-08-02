@@ -1,6 +1,8 @@
 import firebaseConfig from "../../../globals/firebaseConfig";
 import { initializeApp } from "firebase/app";
 import { collection, getFirestore, query, where, getDocs, deleteDoc, doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 
 const splPage = {
     async render(){
@@ -963,6 +965,24 @@ const splPage = {
         })
         
         // MAKE PDF (PRINTBTN)
+        const btnsPrint = document.querySelectorAll('#btnPrint');
+        btnsPrint.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const dataid = btn.getAttribute('data-id');
+                pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+                var docDefinition = {
+                    content: [
+                        'First paragraph',
+                        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+                    ]
+                    
+                }
+                
+                pdfMake.createPdf(docDefinition).open();
+            })
+        })
 
         // Data Table
         $(document).ready(function() {
