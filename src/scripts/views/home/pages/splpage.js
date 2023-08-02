@@ -965,7 +965,7 @@ const splPage = {
                 "columnDefs": [
                     { "width": "20%", "targets": 0}
                 ],
-                 'order': [[1, 'asc']]
+                 'order': [[1, 'desc']]
             });
 
             let table = $('#dataTable2').DataTable({
