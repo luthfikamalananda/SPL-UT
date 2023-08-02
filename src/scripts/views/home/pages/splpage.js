@@ -158,13 +158,13 @@ const splPage = {
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                         </td>
                     </tr>`
 
                     if (foundSPL.status != findStatus) {
                         const btnDelete = document.getElementById('btnDelete')
-                        btnDelete.setAttribute('id', '')
-                        btnDelete.innerHTML = `<h6><span class="badge badge-danger">SUDAH DIPROSES</span></h6>`
+                        btnDelete.setAttribute('style', 'display:none;')
                     }
                 }
 
@@ -187,7 +187,7 @@ const splPage = {
                         <td>${spl[0].tanggal_spl_dibuat}</td>
                         <td>${spl[0].tanggal_lembur}</td>
                         <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
-                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6> <a href="#rejectModal" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a></td>
                     </tr>`
                 }
             });
@@ -231,6 +231,7 @@ const splPage = {
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnApprove' style='color:#2fcd2c;'><i class="material-icons" data-toggle="tooltip" title="Approve">check_circle</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#rejectModal" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
                         </td>
                     </tr>`
@@ -366,6 +367,7 @@ const splPage = {
                         <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
                         </td>
                     </tr>`
@@ -463,6 +465,7 @@ const splPage = {
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnApprove' style='color:#2fcd2c;'><i class="material-icons" data-toggle="tooltip" title="Approve">check_circle</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#rejectModal" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
                         </td>
                     </tr>`
@@ -600,6 +603,7 @@ const splPage = {
                         <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
                         </td>
                     </tr>`
@@ -697,6 +701,7 @@ const splPage = {
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnApprove' style='color:#2fcd2c;'><i class="material-icons" data-toggle="tooltip" title="Approve">check_circle</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#rejectModal" data-id='${splid}' class="delete" data-toggle="modal" id='btnReject'><i class="material-icons" data-toggle="tooltip" title="Reject">close</i></a>
                         </td>
                     </tr>`
@@ -858,6 +863,7 @@ const splPage = {
                         <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
                         </td>
                     </tr>`
@@ -956,6 +962,7 @@ const splPage = {
             }
         })
         
+        // MAKE PDF (PRINTBTN)
 
         // Data Table
         $(document).ready(function() {
