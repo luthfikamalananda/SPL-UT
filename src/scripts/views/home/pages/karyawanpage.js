@@ -4,13 +4,15 @@ import { collection, getFirestore, query, where, getDocs } from "firebase/firest
 
 const karyawanPage = {
     async render(){
-        return `<div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
+        return `<!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>Surat <b>Perintah Lembur</b></h2>
+                        <h2>Surat <b>Perintah Lembur</b></h2>
                         </div>
                         <div class="col-sm-6">
                             <a class="btn btn-success" ><span>00 MENIT</span></a>
@@ -18,7 +20,10 @@ const karyawanPage = {
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style='margin:0;'>
+                    <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID Surat</th>
@@ -33,12 +38,26 @@ const karyawanPage = {
                         
                     </tbody>
                 </table>
+                    </div>
+                </div>
+                
             </div>
-        </div>        
+
+        </div>
+        <!-- /.container-fluid -->
+
     </div>
-    </div>
-    </div>
-    </div>
+    <!-- End of Main Content -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     <!-- Delete Modal HTML -->
     <div id="deleteEmployeeModal" class="modal fade">
         <div class="modal-dialog">

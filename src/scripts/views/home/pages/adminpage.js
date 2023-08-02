@@ -5,20 +5,22 @@ import { nanoid, customAlphabet } from "nanoid";
 
 const adminPage = {
     async render(){
-        return `<div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
+        return `<!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>Manage <b>Akun</b></h2>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"> <span>Tambah Akun Baru</span></a>
+                            <h2>Manajemen <b>Akun</b></h2>
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style='margin:0;'>
+                    <table class="table table-striped table-hover" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Nama</th>
@@ -32,9 +34,29 @@ const adminPage = {
                        
                     </tbody>
                 </table>
+                    </div>
+                    <button class="btn btn-primary" id='save-btn'>Pilih</button>
+                </div>
+                
             </div>
-        </div>        
+
+        </div>
+        <!-- /.container-fluid -->
+
     </div>
+    <!-- End of Main Content -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
     <!-- Add Modal HTML -->
     <div id="addEmployeeModal" class="modal fade">
         <div class="modal-dialog">
