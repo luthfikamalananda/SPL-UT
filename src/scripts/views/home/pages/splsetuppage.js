@@ -94,6 +94,7 @@ const splSetupPage = {
             // get User Input
             const waktuMulaiInput = document.querySelectorAll('#waktuMulaiInput');
             const waktuSelesaiInput = document.querySelectorAll('#waktuSelesaiInput');
+            const keteranganInput = document.querySelectorAll('#keteranganInput')
             const hariInput = document.getElementById('hariInput');
 
             // Reformatting Date
@@ -108,6 +109,7 @@ const splSetupPage = {
             dataKaryawan.forEach((karyawan) => {
                 let waktuMulai;
                 let waktuSelesai;
+                let keterangan;
                 waktuMulaiInput.forEach((mulai) => {
                     if (mulai.getAttribute('data-id') == karyawan.id) {
                         waktuMulai = mulai.value;
@@ -118,10 +120,16 @@ const splSetupPage = {
                         waktuSelesai = selesai.value;
                     }
                 })
+                keteranganInput.forEach((selesai) => {
+                    if (selesai.getAttribute('data-id') == karyawan.id) {
+                        keterangan = selesai.value;
+                    }
+                })
                 let data = {
                     id_karyawan: karyawan.id,
                     waktu_mulai: waktuMulai,
                     waktu_selesai: waktuSelesai,
+                    keterangan: keterangan
                 }
                 processedInput.push(data)
             })
