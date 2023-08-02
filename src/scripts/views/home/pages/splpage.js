@@ -4,15 +4,22 @@ import { collection, getFirestore, query, where, getDocs, deleteDoc, doc, update
 
 const splPage = {
     async render(){
-        return `<div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
+        return `<!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
                 <div class="table-title">
                     <div class="row">
-                        <h2 id='table1Title'><b>Surat Perintah Lembur Keputusan Anda</b></h2>
+                        <div class="col-sm-6">
+                            <h2 id='table1Title'><b>Surat Perintah Lembur Keputusan Anda</b></h2>
+                        </div>
                     </div>
                 </div>
-                <table class="table table-striped table-hover" id="dataTable1" width="100%" cellspacing="0">
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style='margin:0;'>
+                    <table class="table table-striped table-hover" id="dataTable1" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID Surat</th>
@@ -26,23 +33,41 @@ const splPage = {
                     <tbody id='bodyTablePrivate'>
                         
                     </tbody>
-                </table>
-            </div>
-        </div>        
-    </div>
-    </div>
-    </div>
-    </div>
-
-    <div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <h2 id='table2Title'><b>Seluruh Surat Perintah Lembur</b></h2>
+                    </table>
                     </div>
                 </div>
-                <table class="table table-striped table-hover" id="dataTable2" width="100%" cellspacing="0">
+                
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- End of Main Content -->
+        
+        
+        
+        
+        
+        
+        
+        
+    <!-- Begin Page Content -->
+        <div class="container-fluid">
+            <!-- DataTales Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h2 id='table2Title'><b>Seluruh Surat Perintah Lembur</b></h2>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" style='margin:0;'>
+                    <table class="table table-striped table-hover" id="dataTable2" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID Surat</th>
@@ -55,13 +80,27 @@ const splPage = {
                     <tbody id='bodyTable'>
                         
                     </tbody>
-                </table>
+                    </table>
+                    </div>
+                </div>
+                
             </div>
-        </div>        
+
+        </div>
+        <!-- /.container-fluid -->
+
     </div>
-    </div>
-    </div>
-    </div>
+    <!-- End of Main Content -->
+
+
+
+
+
+
+
+
+
+
     <div id="rejectModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
