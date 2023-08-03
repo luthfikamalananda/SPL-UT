@@ -30,6 +30,10 @@ import AppLogin from './views/login/app';
 //   navProfile.setAttribute('href', '/login')
 // }
 
+if(localStorage.getItem('user')) {
+  window.location.href='/'
+}
+
 const appLogin = new AppLogin({
   maincontent: document.querySelector('#mainlogin')
 });
