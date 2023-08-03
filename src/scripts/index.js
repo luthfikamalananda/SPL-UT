@@ -41,6 +41,11 @@ if(!localStorage.getItem('user')) {
   if (role == 'admin') {
     const adminPage = document.getElementById('adminPage');
     adminPage.style.removeProperty('display')
+  } else if (role == 'karyawan'){
+    const daftarKaryawan = document.getElementById('nonAdminPage');
+    daftarKaryawan.setAttribute('style', 'display:none;')
+    const navBar = document.getElementById('navDashboard');
+    navBar.innerText = 'Dashboard'
   }
 }
 
