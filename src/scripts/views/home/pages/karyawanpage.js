@@ -77,10 +77,6 @@ const karyawanPage = {
 
     async afterRender(){
         // Change Navbar
-        const daftarKaryawan = document.getElementById('nonAdminPage');
-        daftarKaryawan.setAttribute('style', 'display:none;')
-        const navBar = document.getElementById('navDashboard');
-        navBar.innerText = 'Dashboard'
 
         // Initialize Database
         const app = initializeApp(firebaseConfig)
@@ -368,6 +364,8 @@ const karyawanPage = {
                 ],
                  'order': [[1, 'asc']]
             });
+
+            window.location.reload();
           });
     }
 }
