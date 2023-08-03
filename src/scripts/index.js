@@ -11,6 +11,33 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updat
 // const START = 10;
 // const NUMBER_OF_IMAGES = 100;
 
+if(localStorage.getItem('user')) {
+  const user = localStorage.getItem('user');
+  const data = JSON.parse(user)
+  const uid = data.id;
+
+  const userName = document.getElementById('userName');
+  userName.innerText = data.name
+  
+  const btnLogout = document.getElementById('btnLogout');
+  btnLogout.addEventListener('click', () => {
+    localStorage.removeItem('user');
+    location.reload();
+  })
+
+  const docRef = doc(db, "user", uid);
+  const docSnap = await getDoc(docRef);
+  const role = docSnap.data().role
+
+  if (role == 'admin') {
+    const adminPage = document.getElementById('adminPage');
+    adminPage.style.removeProperty('display')
+  } 
+  
+} else {
+  window.location.href = '/login';
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -29,31 +56,6 @@ window.addEventListener('load', () => {
   // swRegister();
 });
 
-  if(localStorage.getItem('user')) {
-    const user = localStorage.getItem('user');
-    const data = JSON.parse(user)
-    const uid = data.id;
 
-    const userName = document.getElementById('userName');
-    userName.innerText = data.name
-    
-    const btnLogout = document.getElementById('btnLogout');
-    btnLogout.addEventListener('click', () => {
-      localStorage.removeItem('user');
-      location.reload();
-    })
-
-    const docRef = doc(db, "user", uid);
-    const docSnap = await getDoc(docRef);
-    const role = docSnap.data().role
-
-    if (role == 'admin') {
-      const adminPage = document.getElementById('adminPage');
-      adminPage.style.removeProperty('display')
-    } 
-    
-  } else {
-    window.location.href = '/login';
-  }
 
 
