@@ -127,6 +127,7 @@ const splSetupPage = {
                 })
                 let data = {
                     id_karyawan: karyawan.id,
+                    name: karyawan.name,
                     waktu_mulai: waktuMulai,
                     waktu_selesai: waktuSelesai,
                     keterangan: keterangan
