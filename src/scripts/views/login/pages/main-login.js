@@ -110,7 +110,7 @@ const mainLogin = {
                                     console.log('karyawan');
                                     window.location.href = './#/karyawan';
                                 } else {
-                                    window.location.href = './';
+                                    window.location.href = './#/';
                                 }
                             
                             } 
