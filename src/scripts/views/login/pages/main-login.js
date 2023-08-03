@@ -108,9 +108,9 @@ const mainLogin = {
                             if (result.isConfirmed) {
                                 if (user.role == 'karyawan') {
                                     console.log('karyawan');
-                                    window.location.href = './#/karyawan';
+                                    window.location.href = '../';
                                 } else {
-                                    window.location.href = './#/';
+                                    window.location.href = '../';
                                 }
                             
                             } 
