@@ -11,7 +11,10 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updat
 // const START = 10;
 // const NUMBER_OF_IMAGES = 100;
 
-if(localStorage.getItem('user')) {
+if(!localStorage.getItem('user')) {
+  window.location.href = '/login'
+  
+} else {
   const user = localStorage.getItem('user');
   const data = JSON.parse(user)
   const uid = data.id;
@@ -33,9 +36,6 @@ if(localStorage.getItem('user')) {
     const adminPage = document.getElementById('adminPage');
     adminPage.style.removeProperty('display')
   } 
-  
-} else {
-  window.location.href = '/login';
 }
 
 // Initialize Firebase
