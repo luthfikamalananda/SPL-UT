@@ -18,7 +18,7 @@ const mainLogin = {
                         <div class="row">
                         <br>
                         <br>
-                            <div class="col-lg-6 d-none d-lg-block"><img src ="img/logo.png" style="display: block; margin-left: 5%; margin-right: auto; width: 100%; margin-top: 12%; margin-bottom: 12%;"></div>
+                            <div class="col-lg-6 d-none d-lg-block"><img src ="../img/logo.png" style="display: block; margin-left: 5%; margin-right: auto; width: 100%; margin-top: 12%; margin-bottom: 12%;"></div>
                             <div class="col-lg-6">
                             <br>
                             <br>
