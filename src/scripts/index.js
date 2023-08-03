@@ -15,6 +15,12 @@ if(!localStorage.getItem('user')) {
   window.location.href = '/login'
   
 } else {
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
   const user = localStorage.getItem('user');
   const data = JSON.parse(user)
   const uid = data.id;
@@ -35,13 +41,10 @@ if(!localStorage.getItem('user')) {
   if (role == 'admin') {
     const adminPage = document.getElementById('adminPage');
     adminPage.style.removeProperty('display')
-  } 
+  }
 }
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+
 
 const appHome = new AppHome({
   maincontent: document.querySelector('#mainhome')

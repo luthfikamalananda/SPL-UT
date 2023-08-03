@@ -39,6 +39,7 @@ const loginRoutes ={
 };
 
 const homeRoutes = {
+  '': homePage,
   '/': homePage,
   '/spl': splPage,
   '/admin': adminPage,
