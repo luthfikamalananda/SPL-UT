@@ -106,7 +106,7 @@ const mainLogin = {
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
-                                window.location.href = '../';
+                                window.location.href = '../#/';
                             } 
                         })
                 } else{
