@@ -13,6 +13,7 @@ class AppHome {
       const page = homeRoutes[url];
       this._maincontent.innerHTML = await page.render();
       await page.afterRender();
+      window.location.reload();
     } catch (error) {
       this._maincontent.innerHTML = `<h1>${error}</h1>`;
     }
