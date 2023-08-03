@@ -15,6 +15,9 @@ const adminPage = {
                         <div class="col-sm-6">
                             <h2>Manajemen <b>Akun</b></h2>
                         </div>
+                        <div class="col-sm-6">
+                            <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"> <span>Tambah Akun Baru</span></a>
+                        </div>
                     </div>
                 </div>
                 </div>

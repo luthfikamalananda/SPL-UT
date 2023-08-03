@@ -1123,7 +1123,7 @@ const splPage = {
                         {
                             margin: [0, 5, 0, 15],
                             table: {
-                                widths: [30, '*', '*', '*'],
+                                widths: [30, '*', '*', 'auto'],
                                 body: atasanData
                             }
                         },
