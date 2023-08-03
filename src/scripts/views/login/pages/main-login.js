@@ -106,13 +106,7 @@ const mainLogin = {
                         }).then((result) => {
                             /* Read more about isConfirmed, isDenied below */
                             if (result.isConfirmed) {
-                                if (user.role == 'karyawan') {
-                                    console.log('karyawan');
-                                    window.location.href = '../';
-                                } else {
-                                    window.location.href = '../';
-                                }
-                            
+                                window.location.href = '../';
                             } 
                         })
                 } else{
