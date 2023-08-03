@@ -364,9 +364,9 @@ const karyawanPage = {
                 ],
                  'order': [[1, 'asc']]
             });
-
-            window.location.reload();
           });
+
+          window.location.reload();
     }
 }
 export default karyawanPage;
