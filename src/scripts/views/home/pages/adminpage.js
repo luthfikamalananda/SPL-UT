@@ -38,7 +38,6 @@ const adminPage = {
                     </tbody>
                 </table>
                     </div>
-                    <button class="btn btn-primary" id='save-btn'>Pilih</button>
                 </div>
                 
             </div>
@@ -49,17 +48,6 @@ const adminPage = {
     </div>
     <!-- End of Main Content -->
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-
     <!-- Add Modal HTML -->
     <div id="addEmployeeModal" class="modal fade">
         <div class="modal-dialog">
