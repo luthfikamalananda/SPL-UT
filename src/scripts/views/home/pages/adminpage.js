@@ -124,19 +124,7 @@ const adminPage = {
                 <div class="form-group">
                     <label for='passwordEdit'>Password</label>
                     <input type="password" class="form-control" required id='passwordEdit' name='passwordEdit'>
-                </div>
-                <div class="form-group">
-                <label for='roleEdit'>Role </label>
-                            <select class="form-control" id='roleEdit' name='roleEdit'>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <option value="karyawan"><a class="dropdown-item">Karyawan</a></option>
-                                    <option value="departemen_head"><a class="dropdown-item">Departemen Head</a></option>
-                                    <option value="hcbc"><a class="dropdown-item">HCBC</a></option>
-                                    <option value="general_marketing"><a class="dropdown-item">General Marketing</a></option>
-                                    <option value="departement_head_human_capital"><a class="dropdown-item">Departement Head Human Capital</a></option>
-                                </div>
-                            </select>
-                </div>					
+                </div>				
             </div>
             <div class="modal-footer">
                 <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -184,7 +172,6 @@ const adminPage = {
         const nameEdit = document.getElementById('nameEdit');
         const emailEdit = document.getElementById('emailEdit');
         const passwordEdit = document.getElementById('passwordEdit');
-        const roleEdit = document.getElementById('roleEdit');
         const formEditUser = document.getElementById('formEditUser');
 
         let idEdit = '';
@@ -199,7 +186,6 @@ const adminPage = {
                 nameEdit.value = userCredentials.data().name
                 emailEdit.value = userCredentials.data().email
                 passwordEdit.value = userCredentials.data().password
-                roleEdit.value = userCredentials.data().role
             })    
         });
 
@@ -210,7 +196,6 @@ const adminPage = {
                 name: nameEdit.value,
                 email: emailEdit.value,
                 password: passwordEdit.value,
-                role: roleEdit.value,
             }
 
             try {
