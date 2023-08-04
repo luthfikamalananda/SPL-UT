@@ -145,12 +145,10 @@ const splPage = {
             const dataSPL = await getDocs(initializeData)
             dataSPL.forEach(element => {
                 const spl = element.data().spl
-                console.log(spl);
                 let foundSPL = spl.find(o => o.departemen_head === `${data.id}|${data.name}`);
-                console.log(foundSPL);
                 let splid = element.id
-
                 if (foundSPL) {
+                    console.log(spl[1].status);
                     bodyTablePrivate.innerHTML += `
                     <tr>
                         <td>${splid}</td>
@@ -159,15 +157,15 @@ const splPage = {
                         <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
                         <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
                         <td>
-                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnDelete' style='display:none;'><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                         </td>
                     </tr>`
 
-                    if (foundSPL.status != findStatus) {
+                    if (spl[1].status == findStatus) {
                         const btnDelete = document.getElementById('btnDelete')
-                        btnDelete.setAttribute('style', 'display:none;')
-                    }
+                        btnDelete.setAttribute('style', 'display:inline-block;')
+                    } 
                 }
 
                 
@@ -354,14 +352,13 @@ const splPage = {
             const bodyTable = document.getElementById('bodyTable');
             dataSPL.forEach(element => {
                 const spl = element.data().spl
-                console.log(spl);
                 let foundSPL = spl.find(o => o.hcbc === `${data.id}|${data.name}`);
-                console.log(foundSPL);
                 let splid = element.id
 
                 if (foundSPL) {
-                    bodyTable.innerHTML += `
-                    <tr>
+                    if (spl[1].status == 'diajukan_ke_gm') {
+                        bodyTable.innerHTML += `
+                        <tr>
                         <td>${splid}</td>
                         <td>${spl[0].tanggal_spl_dibuat}</td>
                         <td>${spl[0].tanggal_lembur}</td>
@@ -372,8 +369,24 @@ const splPage = {
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
                             <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
                         </td>
-                    </tr>`
+                    </tr>`;
+                    } else {
+                        bodyTable.innerHTML += `
+                        <tr>
+                        <td>${splid}</td>
+                        <td>${spl[0].tanggal_spl_dibuat}</td>
+                        <td>${spl[0].tanggal_lembur}</td>
+                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                        <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
+                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                        <td>
+                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
+                        </td>
+                    </tr>`;
+                    }
                 }
+
+               
             });
 
             // Undo Button
@@ -595,20 +608,37 @@ const splPage = {
                 let splid = element.id
 
                 if (foundSPL) {
-                    bodyTable.innerHTML += `
-                    <tr>
-                        <td>${splid}</td>
-                        <td>${spl[0].tanggal_spl_dibuat}</td>
-                        <td>${spl[0].tanggal_lembur}</td>
-                        <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
-                        <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
-                        <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
-                        <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
-                        <td>
-                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
-                            <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
-                        </td>
-                    </tr>`
+                    if (spl[1].status == 'diajukan_ke_dhhc') {
+                        bodyTable.innerHTML += `
+                        <tr>
+                            <td>${splid}</td>
+                            <td>${spl[0].tanggal_spl_dibuat}</td>
+                            <td>${spl[0].tanggal_lembur}</td>
+                            <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                            <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
+                            <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
+                            <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                            <td>
+                                <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
+                                <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnRestore'><i class="material-icons" data-toggle="tooltip" title="Restore">restore</i></a>
+                            </td>
+                        </tr>`
+                    } else {
+                        bodyTable.innerHTML += `
+                        <tr>
+                            <td>${splid}</td>
+                            <td>${spl[0].tanggal_spl_dibuat}</td>
+                            <td>${spl[0].tanggal_lembur}</td>
+                            <td>${spl[1].departemen_head.substring(spl[1].departemen_head.indexOf('|')+1)}</td>
+                            <td>${spl[1].hcbc.substring(spl[1].hcbc.indexOf('|')+1)}</td>
+                            <td>${spl[1].general_marketing.substring(spl[1].general_marketing.indexOf('|')+1)}</td>
+                            <td style='text-transform: uppercase;'><h6><span class="badge badge-danger" id='badgeStatus'>${spl[1].status.replace(/_/g,' ')}</span></h6></td>
+                            <td>
+                                <a href="#" data-id='${splid}' class="delete" data-toggle="modal" id='btnPrint' style='color:#444439fa;'><i class="material-icons" data-toggle="tooltip" title="Print">print</i></a>
+                            </td>
+                        </tr>`
+                    }
+                   
                 }
             });
 
