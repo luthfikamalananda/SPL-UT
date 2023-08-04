@@ -75,6 +75,7 @@ const homePage = {
         const bodyTable = document.getElementById('bodyTable');
         const initializeData = query(collection(db, "user"), where("role", "==", "karyawan"))
         const userData = await getDocs(initializeData)
+        console.log(userData);
         userData.forEach(user => {
             let jamLembur = Math.floor(parseInt(user.data().jam_lembur) / 60)
             let menitLembur = parseInt(user.data().jam_lembur) % 60

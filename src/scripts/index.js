@@ -16,14 +16,21 @@ if(!localStorage.getItem('user')) {
   
 } else {
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
   const user = localStorage.getItem('user');
   const data = JSON.parse(user)
   const uid = data.id;
+
+  const appHome = new AppHome({
+    maincontent: document.querySelector('#mainhome')
+  });
+  
+  window.addEventListener('hashchange', () => {
+    appHome.renderPage();
+  });
+    
+  window.addEventListener('load', () => {
+    appHome.renderPage();
+  });
 
   const userName = document.getElementById('userName');
   userName.innerText = data.name
@@ -34,36 +41,13 @@ if(!localStorage.getItem('user')) {
     location.reload();
   })
 
-  const docRef = doc(db, "user", uid);
-  const docSnap = await getDoc(docRef);
-  const role = docSnap.data().role
-
-  if (role == 'admin') {
+  if (data.role == 'admin') {
     const adminPage = document.getElementById('adminPage');
     adminPage.style.removeProperty('display')
-  } else if (role == 'karyawan'){
+  } else if (data.role == 'karyawan'){
     const daftarKaryawan = document.getElementById('nonAdminPage');
     daftarKaryawan.setAttribute('style', 'display:none;')
     const navBar = document.getElementById('navDashboard');
     navBar.innerText = 'Dashboard'
   }
 }
-
-
-
-const appHome = new AppHome({
-  maincontent: document.querySelector('#mainhome')
-});
-
-window.addEventListener('hashchange', () => {
-  appHome.renderPage();
-});
-  
-window.addEventListener('load', () => {
-  appHome.renderPage();
-  // swRegister();
-});
-
-
-
-
