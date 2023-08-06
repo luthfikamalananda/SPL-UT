@@ -751,7 +751,7 @@ const splPage = {
                     const objSPL = docSnap.data().spl;
                     console.log(objSPL);
                     objSPL[1].departement_head_human_capital = `${data.id}|${data.name}` // Add GM in index 1
-                    objSPL[1].status = 'Approved' // Add Status in index 1
+                    objSPL[1].status = 'approved' // Add Status in index 1
 
                     Swal.fire({
                         title: 'SPL ini akan Anda Approve? ',
@@ -914,7 +914,6 @@ const splPage = {
                     console.log(objSPL);
                     delete objSPL[1].departement_head_human_capital
                     delete objSPL[1].reject_reason // Remove reject_reason in index 1
-                    objSPL[1].status = 'diajukan_ke_dhhc' // Restore Status in index 1
 
                     Swal.fire({
                         title: 'Anda yakin ingin mengembalikan status SPL ini?',
@@ -923,32 +922,36 @@ const splPage = {
                     }).then(async (result) => {
                         if (result.isConfirmed) {
                             try {
+                                if (objSPL[1].status == 'approved') {
+                                    // Kalkulasi Jam Lembur + Mengubah Jam Lembur pada Karyawan
+                                    objSPL.forEach(async (element, index) => {
+                                        if (index >= 2) {
+                                            let waktuMulai = element.waktu_mulai.split(':')
+                                            let waktuMulai_ToMenit = (parseInt(waktuMulai[0]) * 60) + (parseInt(waktuMulai[1]))
+                                            console.log(waktuMulai_ToMenit);
+                
+                                            let waktuSelesai = element.waktu_selesai.split(':')
+                                            let waktuSelesai_ToMenit = (parseInt(waktuSelesai[0]) * 60) + (parseInt(waktuSelesai[1]))
+                                            console.log(waktuSelesai_ToMenit);
+                
+                                            let durasiLembur_Menit = Math.abs(waktuSelesai_ToMenit - waktuMulai_ToMenit)
+                                            console.log(durasiLembur_Menit);
+                
+                                            const docRef = await getDoc(doc(db, 'user', element.id_karyawan))
+                                            const dataKaryawan = docRef.data();
+                
+                                            await updateDoc(doc(db, 'user', element.id_karyawan), {
+                                                jam_lembur: parseInt(dataKaryawan.jam_lembur) + durasiLembur_Menit
+                                            });
+                                        }
+                                    })
+                                }
+
+                                objSPL[1].status = 'diajukan_ke_dhhc' // Restore Status in index 1
                                 await setDoc(doc(db, 'spl', dataid), {
                                     spl:objSPL
                                 });
 
-                                // Kalkulasi Jam Lembur + Mengubah Jam Lembur pada Karyawan
-                                objSPL.forEach(async (element, index) => {
-                                    if (index >= 2) {
-                                        let waktuMulai = element.waktu_mulai.split(':')
-                                        let waktuMulai_ToMenit = (parseInt(waktuMulai[0]) * 60) + (parseInt(waktuMulai[1]))
-                                        console.log(waktuMulai_ToMenit);
-            
-                                        let waktuSelesai = element.waktu_selesai.split(':')
-                                        let waktuSelesai_ToMenit = (parseInt(waktuSelesai[0]) * 60) + (parseInt(waktuSelesai[1]))
-                                        console.log(waktuSelesai_ToMenit);
-            
-                                        let durasiLembur_Menit = Math.abs(waktuSelesai_ToMenit - waktuMulai_ToMenit)
-                                        console.log(durasiLembur_Menit);
-            
-                                        const docRef = await getDoc(doc(db, 'user', element.id_karyawan))
-                                        const dataKaryawan = docRef.data();
-            
-                                        await updateDoc(doc(db, 'user', element.id_karyawan), {
-                                            jam_lembur: parseInt(dataKaryawan.jam_lembur) + durasiLembur_Menit
-                                        });
-                                    }
-                                })
 
                                 Swal.fire({
                                     icon: 'success',
