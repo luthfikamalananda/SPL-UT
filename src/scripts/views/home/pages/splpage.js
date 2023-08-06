@@ -356,7 +356,7 @@ const splPage = {
                 let splid = element.id
 
                 if (foundSPL) {
-                    if (spl[1].status == 'diajukan_ke_gm') {
+                    if (spl[1].status == 'diajukan_ke_gm' || spl[1].status == 'ditolak_oleh_hcbc') {
                         bodyTable.innerHTML += `
                         <tr>
                         <td>${splid}</td>
@@ -608,7 +608,7 @@ const splPage = {
                 let splid = element.id
 
                 if (foundSPL) {
-                    if (spl[1].status == 'diajukan_ke_dhhc') {
+                    if (spl[1].status == 'diajukan_ke_dhhc' || spl[1].status == 'ditolak_oleh_gm') {
                         bodyTable.innerHTML += `
                         <tr>
                             <td>${splid}</td>
