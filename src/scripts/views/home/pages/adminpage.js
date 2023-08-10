@@ -17,6 +17,7 @@ const adminPage = {
                         </div>
                         <div class="col-sm-6">
                             <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"> <span>Tambah Akun Baru</span></a>
+                            <a href="#" class="btn btn-danger" data-toggle="modal" id='btnReset'> <span>Reset Jam Kerja</span></a>
                         </div>
                     </div>
                 </div>
@@ -81,7 +82,7 @@ const adminPage = {
                                         <option value="departement_head_human_capital"><a class="dropdown-item">Departement Head Human Capital</a></option>
                                     </div>
                                 </select>
-                        </div>					
+                        </div>			
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Batal">
@@ -112,6 +113,10 @@ const adminPage = {
                 <div class="form-group">
                     <label for='passwordEdit'>Password</label>
                     <input type="password" class="form-control" required id='passwordEdit' name='passwordEdit'>
+                </div>	
+                <div class="form-group" style='display:none' id='form-group-jamLembur'>
+                    <label for='jamLemburEdit'>Jam Lembur (60 Menit = 1 Jam)</label>
+                    <input type="number" class="form-control" id='jamLemburEdit' name='jamLemburEdit' max='7200'>
                 </div>				
             </div>
             <div class="modal-footer">
@@ -160,9 +165,11 @@ const adminPage = {
         const nameEdit = document.getElementById('nameEdit');
         const emailEdit = document.getElementById('emailEdit');
         const passwordEdit = document.getElementById('passwordEdit');
+        const jamLemburEdit = document.getElementById('jamLemburEdit');
         const formEditUser = document.getElementById('formEditUser');
 
         let idEdit = '';
+        let isKaryawan = false;
         btnsEdit.forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -170,6 +177,12 @@ const adminPage = {
 
                 const docRef = doc(db, "user", idEdit);
                 const userCredentials = await getDoc(docRef);
+
+                if (userCredentials.data().role == 'karyawan') {
+                    document.getElementById('form-group-jamLembur').style.display = 'block'
+                    jamLemburEdit.value = userCredentials.data().jam_lembur
+                    isKaryawan = true;
+                }
 
                 nameEdit.value = userCredentials.data().name
                 emailEdit.value = userCredentials.data().email
@@ -184,6 +197,10 @@ const adminPage = {
                 name: nameEdit.value,
                 email: emailEdit.value,
                 password: passwordEdit.value,
+            }
+
+            if (isKaryawan) {
+                data.jam_lembur = jamLemburEdit.value
             }
 
             try {
@@ -292,6 +309,49 @@ const adminPage = {
                     })
             }
         });
+
+        // Reset
+        const resetBtn = document.getElementById('btnReset');
+        resetBtn.addEventListener('click', async () => {
+            Swal.fire({
+                title: 'Anda yakin ingin mereset Jam Lembur semua karyawan? ',
+                showCancelButton: true,
+                confirmButtonText: 'Konfirmasi',
+              }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const q = query(collection(db, "user"), where("role", "==", 'karyawan'));
+
+                        const querySnapshot = await getDocs(q);
+                        querySnapshot.forEach(async (karyawan) => {
+                            await updateDoc(doc(db, 'user', karyawan.id), {
+                                jam_lembur: '7200'
+                            });
+                        })
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Reset Berhasil',
+                            text: 'Selamat reset berhasil',
+                            showCloseButton: true,
+                            }).then(async (result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                    location.reload()
+                                } 
+                            })
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Reset Gagal',
+                            text: error,
+                            showCloseButton: true,
+                            allowOutsideClick: false
+                            })
+                    }   
+                }
+              });
+        })
 
         // Data Tables
         $(document).ready(function() {
