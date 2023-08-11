@@ -182,6 +182,9 @@ const adminPage = {
                     document.getElementById('form-group-jamLembur').style.display = 'block'
                     jamLemburEdit.value = userCredentials.data().jam_lembur
                     isKaryawan = true;
+                } else {
+                    document.getElementById('form-group-jamLembur').style.display = 'none'
+                    isKaryawan = false;
                 }
 
                 nameEdit.value = userCredentials.data().name
@@ -201,7 +204,7 @@ const adminPage = {
 
             if (isKaryawan) {
                 data.jam_lembur = jamLemburEdit.value
-            }
+            } 
 
             try {
                 await updateDoc(doc(db, "user", idEdit), data)
